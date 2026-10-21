@@ -1,0 +1,113 @@
+.profile-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  box-sizing: border-box;
+}
+.profile-card {
+  position: relative;
+  width: 340px;
+  max-width: 100%;
+  background: var(--opaque-primary, rgba(255, 255, 255, 0.85));
+  color: var(--text-primary, #000);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.profile-card .close-btn {
+  top: 16px;
+  right: 16px;
+}
+.profile-avatar {
+  display: block;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  margin: 16px 0 0 16px;
+}
+.profile-body {
+  padding: 10px 16px 16px;
+}
+.profile-display-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.profile-username {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary, #777);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.profile-app-tag {
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.profile-roles {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.profile-section {
+  margin-top: 14px;
+}
+.profile-section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #777);
+  margin-bottom: 6px;
+}
+.profile-bio {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.profile-state {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary, #777);
+}
+.profile-footer {
+  padding: 0 16px 16px;
+}
+.profile-edit-btn {
+  width: 100%;
+  height: var(--control-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  border-radius: var(--control-radius);
+  font-size: var(--control-font-size);
+  font-weight: 600;
+  cursor: pointer;
+}
+.profile-edit-btn:hover {
+  background: var(--accent-hover);
+}

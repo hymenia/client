@@ -1,0 +1,53 @@
+.landing-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+.landing-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  border-radius: 16px;
+  color: var(--text-primary, #000);
+  text-align: center;
+}
+.landing-title {
+  margin: 0;
+  line-height: 0;
+}
+.landing-title img {
+  display: block;
+  width: min(200px, 100%);
+  height: auto;
+}
+
+.landing-caption {
+  margin: 0 0 12px;
+  color: var(--text-secondary, #777);
+  font-size: 13px;
+}
+.landing-card .theme-btn {
+  width: 100%;
+  text-decoration: none;
+}
+.landing-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+.landing-links a {
+  color: var(--text-secondary, #777);
+  font-size: 13px;
+  text-decoration: none;
+}
+.landing-links a:hover {
+  color: var(--text-primary, #000);
+}

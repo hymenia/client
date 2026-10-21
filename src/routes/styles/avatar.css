@@ -1,0 +1,50 @@
+.avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.avatar-preview,
+.msg-avatar,
+.bar-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  flex-shrink: 0;
+}
+.avatar-preview {
+  width: 56px;
+  height: 56px;
+}
+.msg-avatar {
+  width: 26px;
+  height: 26px;
+  margin-top: 2px;
+}
+.msg-avatar-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  line-height: 0;
+}
+.msg-avatar-button:hover .msg-avatar {
+  border-color: var(--accent);
+}
+.bar-avatar {
+  width: 26px;
+  height: 26px;
+}
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.avatar-upload-label {
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

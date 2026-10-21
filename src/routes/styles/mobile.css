@@ -1,0 +1,124 @@
+.mobile-back-btn {
+  display: none;
+}
+.bar .mobile-back-btn {
+  display: none;
+}
+@media (max-width: 768px) {
+  .app-layout {
+    border-radius: 0;
+    border: none;
+  }
+  .col-divider {
+    display: none;
+  }
+  .col-spaces,
+  .col-chats,
+  .col-chat {
+    display: none;
+    width: 100% !important;
+    flex: 1 1 100%;
+  }
+  .app-layout[data-mobile-view='spaces'] .col-spaces,
+  .app-layout[data-mobile-view='chats'] .col-chats,
+  .app-layout[data-mobile-view='chat'] .col-chat {
+    display: flex;
+  }
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary, #000);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .bar .mobile-back-btn {
+    display: flex;
+  }
+  .col-chats .mobile-back-btn {
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  }
+  .bar {
+    gap: 8px;
+  }
+  .bar .bar-user {
+    min-width: 0;
+    flex: 1;
+  }
+  .bar .bar-user span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bar .bar-actions {
+    flex-shrink: 0;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  .settings-backdrop {
+    padding: 0;
+  }
+  .settings-modal {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+  }
+  .settings-sidebar {
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  }
+  .settings-nav-item {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border-bottom: none;
+    border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  }
+  .settings-nav-item.logout-tab {
+    border-right: none;
+  }
+  .settings-nav-spacer.flex-grow {
+    display: none;
+  }
+  .settings-inner-body {
+    padding: 20px;
+    padding-top: 20px;
+    max-width: none;
+  }
+  .close-btn {
+    top: 8px;
+    right: 8px;
+  }
+  :root {
+    --control-height: 44px;
+    --control-font-size: 16px;
+  }
+  .chat-item,
+  .space-item {
+    min-height: 44px;
+  }
+  .email-settings .email-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .email-settings .email-form button {
+    width: 100%;
+  }
+}

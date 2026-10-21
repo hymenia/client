@@ -1,0 +1,117 @@
+.developer-panel > p {
+  color: var(--text-secondary, #777);
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+.app-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.app-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-secondary, #f5f5f5);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  border-radius: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.app-name {
+  font-weight: 600;
+  margin-right: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.app-row button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.application-panel {
+  margin-top: -8px;
+  padding: 12px;
+  background: var(--bg-secondary, #f5f5f5);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+.application-panel .invite-list {
+  margin-top: 10px;
+}
+.app-create-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.app-create-row input {
+  flex: 1;
+  height: var(--control-height);
+  padding: 0 12px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #000);
+  font-size: var(--control-font-size);
+  border-radius: var(--control-radius);
+  box-sizing: border-box;
+}
+.app-create-row input::placeholder {
+  color: #999;
+  opacity: 1;
+}
+.webhook-create-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.webhook-create-form input,
+.webhook-create-form select {
+  flex: 1;
+  min-width: 160px;
+  height: var(--control-height);
+  padding: 0 12px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #000);
+  font-size: var(--control-font-size);
+  border-radius: var(--control-radius);
+  box-sizing: border-box;
+}
+.app-token-box,
+.app-token-box {
+  margin-bottom: 18px;
+}
+.app-token-box p,
+.app-token-box p {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+.app-token-row,
+.app-token-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-token-value,
+.app-token-value {
+  display: flex;
+  align-items: center;
+  height: var(--control-height);
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: var(--control-radius);
+  font-family: monospace;
+  font-size: 12px;
+}

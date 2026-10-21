@@ -1,0 +1,112 @@
+:root {
+  --motion-fast: 140ms;
+  --motion-normal: 220ms;
+  --motion-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+body {
+  transition:
+    background-color var(--motion-normal) var(--motion-ease),
+    color var(--motion-normal) var(--motion-ease);
+}
+
+button,
+a,
+input,
+select,
+textarea,
+.space-item,
+.chat-item,
+.sidebar-new-btn,
+.landing-card,
+.col-spaces,
+.col-chats,
+.col-chat {
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--motion-ease);
+}
+
+button:not(:disabled) {
+  transition-property: background-color, color, border-color, box-shadow, opacity, transform;
+}
+
+
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+a {
+  transition-property: color, opacity;
+}
+
+input,
+select,
+textarea {
+  transition-property: border-color, background-color, color, box-shadow;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.app-layout,
+.landing-card {
+  animation: motion-rise-in 320ms var(--motion-ease) both;
+}
+
+.settings-backdrop,
+.profile-backdrop,
+.sidebar-dialog-backdrop {
+  animation: motion-fade-in 160ms ease-out both;
+}
+
+.settings-modal,
+.profile-card,
+.sidebar-dialog {
+  animation: motion-pop-in 220ms var(--motion-ease) both;
+}
+
+.space-item,
+.chat-item,
+.sidebar-new-btn,
+.landing-links a {
+  transition-property: background-color, color, opacity, transform;
+}
+
+@keyframes motion-rise-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes motion-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

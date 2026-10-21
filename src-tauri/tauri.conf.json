@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Hymenia",
+  "version": "0.0.1",
+  "identifier": "app.succession.hymenia",
+  "build": {
+    "beforeDevCommand": {
+      "script": "pnpm dev -- --mode tauri",
+      "cwd": ".."
+    },
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": {
+      "script": "pnpm build",
+      "cwd": ".."
+    },
+    "frontendDist": "../build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Hymenia",
+        "width": 1280,
+        "height": 800,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all"
+  }
+}

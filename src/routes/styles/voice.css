@@ -1,0 +1,38 @@
+.voice-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  background: var(--bg-secondary, rgba(0, 0, 0, 0.04));
+  font-size: 13px;
+}
+.voice-speaking {
+  color: var(--accent, #2fb380);
+  font-weight: 600;
+}
+.voice-bar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary, #555);
+}
+.voice-bar-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.voice-bar-error {
+  color: #ff6b6b;
+}
+.voice-joined-marker {
+  font-size: 10px;
+  color: var(--success);
+  font-weight: 600;
+  margin-left: auto;
+  flex-shrink: 0;
+}
