@@ -1,3 +1,5 @@
+![The Hymenia Wordmark](https://hymenia.dotun.cc/banner.png)
+
 # Hymenia Client
 
 The official SvelteKit client for Hymenia, a chat and VoIP platform.
