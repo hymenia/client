@@ -57,3 +57,10 @@ body {
 svg {
   flex-shrink: 0;
 }
+.theme-btn.active:hover:not(:disabled),
+.toggle button.active:hover:not(:disabled),
+.chat-view > form button[type='submit']:hover:not(:disabled),
+.profile-edit-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #7cb32f 0%, #2fb380 100%);
+  border-color: #2fb380;
+}

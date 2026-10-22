@@ -279,3 +279,18 @@
   background: rgba(255, 152, 0, 0.1);
   color: #ff9800;
 }
+.server-switcher-compact details > summary {
+  margin-bottom: 8px;
+}
+
+.server-switcher-compact .form-group {
+  margin-bottom: 0;
+}
+
+.server-switcher-compact .theme-options {
+  margin-top: 12px;
+}
+
+.server-switcher-hint {
+  margin: 12px 0 0;
+}

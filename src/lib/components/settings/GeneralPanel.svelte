@@ -1,5 +1,6 @@
 <script>
   import { auth } from '$lib/stores.js';
+  import ServerSwitcher from '../ServerSwitcher.svelte';
 
   let {
     restoreLastLocation = $bindable(true),
@@ -38,4 +39,5 @@
       Press Enter to send messages
     </label>
   </div>
+  <ServerSwitcher />
 </div>

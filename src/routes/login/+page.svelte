@@ -1,6 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
   import { PUBLIC_HCAPTCHA_SITEKEY } from '$env/static/public';
+  import ServerSwitcher from '$lib/components/ServerSwitcher.svelte';
   import { API_HOST } from '$lib/config.js';
   import { auth } from '$lib/stores.js';
   import { startAuthentication } from '@simplewebauthn/browser';
@@ -185,4 +186,6 @@
   {#if err}
     <p class="err">{err}</p>
   {/if}
+  <br>
+  <ServerSwitcher compact />
 </div>
