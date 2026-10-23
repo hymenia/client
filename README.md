@@ -1,4 +1,4 @@
-![The Hymenia Wordmark](https://hymenia.dotun.cc/banner.png)
+![The Hymenia Banner](https://hymenia.dotun.cc/ghbanner.png)
 
 # Hymenia Client
 
