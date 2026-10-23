@@ -1,6 +1,7 @@
 <script>
   import { API_HOST } from '$lib/config.js';
   import { auth } from '$lib/stores.js';
+  import { renderMarkdown } from '$lib/md.js';
   import BadgeCheck from '@lucide/svelte/icons/badge-check';
   import Code from '@lucide/svelte/icons/code';
   import Pencil from '@lucide/svelte/icons/pencil';
@@ -83,7 +84,7 @@
           {/if}
           <div class="profile-section">
             <span class="profile-section-label">About me</span>
-            <p class="profile-bio">{profile.bio || 'I\'m too cool to write a bio. Try talking to me directly!'}</p>
+            <p class="profile-bio">{@html renderMarkdown(profile.bio || 'I\'m too cool to write a bio. Try talking to me directly!')}</p>
           </div>
         </div>
         {#if onEditProfile && profile.username === $auth.user?.username}

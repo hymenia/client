@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL, PUBLIC_WS_URL } from '$env/static/public';
+const { PUBLIC_API_URL, PUBLIC_WS_URL } = import.meta.env;
 
 const port = import.meta.env.PUBLIC_API_PORT || '9070';
 const isTauri = typeof window !== 'undefined'

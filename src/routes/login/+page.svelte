@@ -1,6 +1,5 @@
 <script>
   import { goto } from '$app/navigation';
-  import { PUBLIC_HCAPTCHA_SITEKEY } from '$env/static/public';
   import ServerSwitcher from '$lib/components/ServerSwitcher.svelte';
   import { API_HOST } from '$lib/config.js';
   import { auth } from '$lib/stores.js';
@@ -11,9 +10,10 @@
   let username = $state('');
   let password = $state('');
   let email = $state('');
+  let agreedToPolicies = $state(false);
   let err = $state('');
-  let hcaptchaEnabled = $state(!!PUBLIC_HCAPTCHA_SITEKEY);
-  let hcaptchaSitekey = $state(PUBLIC_HCAPTCHA_SITEKEY || '');
+  let hcaptchaEnabled = $state(!!import.meta.env.PUBLIC_HCAPTCHA_SITEKEY);
+  let hcaptchaSitekey = $state(import.meta.env.PUBLIC_HCAPTCHA_SITEKEY || '');
   let hcaptchaToken = $state('');
 
   async function loadHCaptcha() {
@@ -68,6 +68,10 @@
     let body = { username, password };
 
     if (mode === 'register') {
+      if (!agreedToPolicies) {
+        err = 'Please agree to the Terms of Service and Privacy Policy before registering';
+        return;
+      }
       if (!email.trim()) {
         err = 'Email is required';
         return;
@@ -171,6 +175,10 @@
     <input type="password" bind:value={password} placeholder="Password" />
     {#if mode === 'register'}
       <input type="email" bind:value={email} placeholder="Email" />
+      <label class="auth-policy">
+        <input type="checkbox" bind:checked={agreedToPolicies} required />
+        <span>I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</span>
+      </label>
     {/if}
     {#if hcaptchaEnabled}
       <div class="hcaptcha-wrap">

@@ -48,3 +48,8 @@
   align-items: center;
   gap: 6px;
 }
+.msg-avatar-spacer {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+}

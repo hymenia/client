@@ -75,6 +75,7 @@
       });
       await room.connect(`${WS_HOST}/livekit`, data.token);
     } catch (e) {
+      console.error('[voice] couldn\'t connect to livekit:', e);
       voiceErr = 'Could not join the voice room';
       room = null;
       return;

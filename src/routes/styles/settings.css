@@ -284,12 +284,14 @@
 }
 
 .server-switcher-compact .form-group {
+  gap: 0;
   margin-bottom: 0;
 }
 
-.server-switcher-compact .theme-options {
-  margin-top: 12px;
+.server-switcher-compact .form-group label {
+  margin-bottom: 4px;
 }
+
 
 .server-switcher-hint {
   margin: 12px 0 0;

@@ -106,7 +106,7 @@
         disabled={switchingServer}
       />
     </div>
-    <div class="theme-options">
+    <div class="server-switch-options">
       <button class="theme-btn" type="submit" disabled={switchingServer}>
         {switchingServer ? 'Checking...' : 'Connect'}
       </button>

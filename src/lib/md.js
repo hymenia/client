@@ -33,6 +33,13 @@ export function renderMarkdown(input) {
     }
   );
 
+  text = text.replace(/https?:\/\/[^\s<]+/gi, (match) => {
+    const url = match.replace(/[.,!?;:)\]}]+$/g, '');
+    const trailing = match.slice(url.length);
+    if (!url) return match;
+    return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`) + trailing;
+  });
+
   text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/__([^_\n]+)__/g, '<u>$1</u>');
   text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');

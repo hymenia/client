@@ -48,6 +48,19 @@
     return `${API_HOST}/api/avatar/${encodeURIComponent(username)}?v=${avatarVersion}`;
   }
 
+  function isGroupedMessage(previous, current) {
+    if (!previous || previous.sender !== current.sender) return false;
+    if (previous.senderIsApp !== current.senderIsApp) return false;
+    if (previous.senderDisplayName !== current.senderDisplayName) return false;
+
+    const previousTime = Date.parse(previous.createdAt || '');
+    const currentTime = Date.parse(current.createdAt || '');
+    return Number.isFinite(previousTime)
+      && Number.isFinite(currentTime)
+      && currentTime >= previousTime
+      && currentTime - previousTime <= 5 * 60 * 1000;
+  }
+
   function isAudioAttachment(attachment) {
     return attachment.mimeType?.startsWith('audio/') || attachment.mimeType === 'video/webm';
   }
@@ -100,11 +113,16 @@
     </div>
   {/if}
   <div class="list" bind:this={box} onscroll={onScroll}>
-    {#each msgs as m (m.id || m.tempId || m.timestamp)}
-      <div class="msg">
-        <button type="button" class="msg-avatar-button" onclick={() => onProfileClick?.(m.sender)}>
-          <img src={avatarSrc(m.sender)} alt={m.sender} class="msg-avatar" />
-        </button>
+    {#each msgs as m, i (m.id || m.tempId || m.timestamp)}
+      {@const grouped = isGroupedMessage(msgs[i - 1], m)}
+      <div class="msg" class:msg-grouped={grouped}>
+        {#if grouped}
+          <div class="msg-avatar-spacer" aria-hidden="true"></div>
+        {:else}
+          <button type="button" class="msg-avatar-button" onclick={() => onProfileClick?.(m.sender)}>
+            <img src={avatarSrc(m.sender)} alt={m.sender} class="msg-avatar" />
+          </button>
+        {/if}
         <div class="msg-body">
           {#if m.replyToSender}
             <div class="msg-reply-quote">
@@ -112,10 +130,12 @@
               <span class="msg-reply-quote-content">{m.replyToContent}</span>
             </div>
           {/if}
-          <div class="msg-header">
-            <span class="msg-sender" title={m.sender}>{m.senderDisplayName || m.sender}</span>
-            {#if m.senderIsApp}<span class="msg-app-badge">APP</span>{/if}
-          </div>
+          {#if !grouped}
+            <div class="msg-header">
+              <span class="msg-sender" title={m.sender}>{m.senderDisplayName || m.sender}</span>
+              {#if m.senderIsApp}<span class="msg-app-badge">APP</span>{/if}
+            </div>
+          {/if}
           <div class="msg-content">{@html renderMarkdown(m.content)}</div>
           {#if m.attachments?.length}
             <div class="msg-attachments">

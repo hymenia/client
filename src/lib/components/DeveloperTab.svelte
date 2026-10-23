@@ -28,6 +28,8 @@
   let webhookErr = $state('');
   let newWebhookToken = $state(null);
   let webhookUrlCopied = $state(false);
+  let webhookSecretCopied = $state(false);
+  let githubWebhookUrlCopied = $state(false);
 
   function webhookUrl(token) {
     return `${API_HOST}/api/webhooks/${token}`;
@@ -246,7 +248,7 @@
         webhookErr = data.error || 'Could not create webhook';
         return;
       }
-      newWebhookToken = { name: data.webhook.name, token: data.token };
+      newWebhookToken = { name: data.webhook.name, token: data.token, signingSecret: data.signing_secret };
       webhookName = '';
       webhookChatId = '';
       await loadAppWebhooks(appId);
@@ -281,6 +283,28 @@
       setTimeout(() => { webhookUrlCopied = false; }, 1500);
     } catch (e) {
       webhookErr = 'Could not copy webhook URL';
+    }
+  }
+
+  async function copyWebhookSecret() {
+    if (!newWebhookToken) return;
+    try {
+      await navigator.clipboard.writeText(newWebhookToken.signingSecret);
+      webhookSecretCopied = true;
+      setTimeout(() => { webhookSecretCopied = false; }, 1500);
+    } catch (e) {
+      webhookErr = 'Could not copy webhook secret';
+    }
+  }
+
+  async function copyGitHubWebhookUrl() {
+    if (!newWebhookToken) return;
+    try {
+      await navigator.clipboard.writeText(`${webhookUrl(newWebhookToken.token)}/github`);
+      githubWebhookUrlCopied = true;
+      setTimeout(() => { githubWebhookUrlCopied = false; }, 1500);
+    } catch (e) {
+      webhookErr = 'Could not copy GitHub webhook URL';
     }
   }
 
@@ -360,7 +384,7 @@
       {/if}
       {#if expandedWebhookAppId === app.id}
         <div class="application-panel">
-          <p class="invite-subtitle">Quickly send messages to a text chat using just a URL, without the need for a token.</p>
+          <p class="invite-subtitle">Create webhooks for a channel..</p>
           {#if webhookErr}
             <p class="err">{webhookErr}</p>
           {/if}
@@ -376,11 +400,25 @@
           </form>
           {#if newWebhookToken}
             <div class="app-token-box">
-              <p><strong>{newWebhookToken.name}</strong> | Copy this URL now, it won't be shown again:</p>
+              <p><strong>{newWebhookToken.name}</strong> | Copy both values now; they won't be shown again:</p>
               <div class="app-token-row">
                 <code class="app-token-value">{webhookUrl(newWebhookToken.token)}</code>
                 <button type="button" class="theme-btn" onclick={copyWebhookUrl}>
                   <Copy size={14} /> {webhookUrlCopied ? 'Copied!' : 'Copy URL'}
+                </button>
+              </div>
+              <p>GitHub payload URL</p>
+              <div class="app-token-row">
+                <code class="app-token-value">{webhookUrl(newWebhookToken.token)}/github</code>
+                <button type="button" class="theme-btn" onclick={copyGitHubWebhookUrl}>
+                  <Copy size={14} /> {githubWebhookUrlCopied ? 'Copied!' : 'Copy GitHub URL'}
+                </button>
+              </div>
+              <p>Standard Webhooks/GitHub signing secret</p>
+              <div class="app-token-row">
+                <code class="app-token-value">{newWebhookToken.signingSecret}</code>
+                <button type="button" class="theme-btn" onclick={copyWebhookSecret}>
+                  <Copy size={14} /> {webhookSecretCopied ? 'Copied!' : 'Copy secret'}
                 </button>
               </div>
             </div>

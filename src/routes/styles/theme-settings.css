@@ -3,6 +3,12 @@
   gap: 12px;
   margin-top: 16px;
 }
+
+.server-switch-options {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
 .theme-btn {
   min-height: var(--control-height);
   height: auto;
