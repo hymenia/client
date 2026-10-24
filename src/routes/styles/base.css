@@ -1,6 +1,6 @@
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f0f0f0;
+  --bg-primary: rgba(255, 255, 255, 0.55);
+  --bg-secondary: rgba(240, 240, 240, 0.6);
   --bg-active: #dddddd;
   --text-primary: #000000;
   --text-secondary: #555555;
@@ -19,8 +19,8 @@
   --opaque-secondary: rgba(240, 240, 240, 0.85);
 }
 body.dark {
-  --bg-primary: #454545;
-  --bg-secondary: #505050;
+  --bg-primary: rgba(69, 69, 69, 0.6);
+  --bg-secondary: rgba(80, 80, 80, 0.6);
   --bg-active: #404040;
   --text-primary: #f0f0f0;
   --text-secondary: #aaaaaa;
@@ -51,9 +51,17 @@ a:focus-visible {
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg-primary);
   color: var(--text-primary);
 }
+
+body {
+  background: linear-gradient(135deg, #eeeeee, #d1dfc2) fixed;
+}
+
+body.dark {
+  background: linear-gradient(135deg, #23330d, #0d3325) fixed;
+}
+
 svg {
   flex-shrink: 0;
 }
@@ -71,4 +79,13 @@ svg {
 .auth button:not(.active):hover:not(:disabled),
 .create-form button:hover:not(:disabled) {
   background: linear-gradient(180deg, var(--btn-bg), var(--btn-hover));
+}
+
+a,
+a:visited {
+  color: var(--accent);
+}
+
+a:hover {
+  color: var(--accent-hover);
 }

@@ -6,11 +6,8 @@
   import { startAuthentication } from '@simplewebauthn/browser';
   import { onMount } from 'svelte';
 
-  let mode = $state('login');
   let username = $state('');
   let password = $state('');
-  let email = $state('');
-  let agreedToPolicies = $state(false);
   let err = $state('');
   let hcaptchaEnabled = $state(!!import.meta.env.PUBLIC_HCAPTCHA_SITEKEY);
   let hcaptchaSitekey = $state(import.meta.env.PUBLIC_HCAPTCHA_SITEKEY || '');
@@ -64,27 +61,14 @@
 
   async function submitauth() {
     err = '';
-    let path = mode.toLowerCase() === 'login' ? 'login' : 'register';
     let body = { username, password };
-
-    if (mode === 'register') {
-      if (!agreedToPolicies) {
-        err = 'Please agree to the Terms of Service and Privacy Policy before registering';
-        return;
-      }
-      if (!email.trim()) {
-        err = 'Email is required';
-        return;
-      }
-      body.email = email.trim();
-    }
 
     if (hcaptchaEnabled) {
       body.hcaptcha = hcaptchaToken;
     }
 
     try {
-      let res = await fetch(`${API_HOST}/api/auth/` + path, {
+      let res = await fetch(`${API_HOST}/api/auth/login`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(body)
@@ -155,45 +139,37 @@
   }
 </script>
 
-<div class="auth">
-  <div class="toggle">
-    <button type="button" class:active={mode === 'login'} onclick={() => { mode = 'login'; err = ''; }}>
-      Log in
-    </button>
-    <button type="button" class:active={mode === 'register'} onclick={() => { mode = 'register'; err = ''; }}>
-      Register
-    </button>
+<div class="auth-page">
+  <div class="auth">
+    <img class="auth-logo" src="/authlogo.svg" alt="Logo" />
+
+    <div class="auth-content">
+      <h2>Welcome back</h2>
+
+      <form
+        onsubmit={(e) => {
+          e.preventDefault();
+          submitauth();
+        }}
+      >
+        <input type="text" bind:value={username} placeholder="Username" />
+        <input type="password" bind:value={password} placeholder="Password" />
+        {#if hcaptchaEnabled}
+          <div class="hcaptcha-wrap">
+            <div id="hcaptcha-widget"></div>
+          </div>
+        {/if}
+        <button type="submit">Log in</button>
+        <button type="button" onclick={loginWithPasskey}>Log in with passkey</button>
+      </form>
+
+      {#if err}
+        <p class="err">{err}</p>
+      {/if}
+
+      <p>Need an account? <a href="/register">Register</a></p>
+      <br>
+      <ServerSwitcher compact />
+    </div>
   </div>
-
-  <form
-    onsubmit={(e) => {
-      e.preventDefault();
-      submitauth();
-    }}
-  >
-    <input type="text" bind:value={username} placeholder="Username" />
-    <input type="password" bind:value={password} placeholder="Password" />
-    {#if mode === 'register'}
-      <input type="email" bind:value={email} placeholder="Email" />
-      <label class="auth-policy">
-        <input type="checkbox" bind:checked={agreedToPolicies} required />
-        <span>I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</span>
-      </label>
-    {/if}
-    {#if hcaptchaEnabled}
-      <div class="hcaptcha-wrap">
-        <div id="hcaptcha-widget"></div>
-      </div>
-    {/if}
-    <button type="submit">{mode === 'login' ? 'Log in' : 'Register'}</button>
-    {#if mode === 'login'}
-      <button type="button" onclick={loginWithPasskey}>Log in with passkey</button>
-    {/if}
-  </form>
-
-  {#if err}
-    <p class="err">{err}</p>
-  {/if}
-  <br>
-  <ServerSwitcher compact />
 </div>

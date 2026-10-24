@@ -491,22 +491,6 @@
 
     <VoiceBar bind:this={voiceBar} bind:voiceChatId />
 
-    <InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
-    <AdminPanel bind:show={showAdmin} />
-    <ProfileDialog bind:show={showProfile} username={profileUsername} {avatarVersion} onEditProfile={editOwnProfile} />
-
-    <SettingsModal
-      bind:show={showSettings}
-      onClose={closeSettings}
-      onLogout={logout}
-      {theme}
-      onToggleTheme={toggleTheme}
-      onAvatarChanged={() => (avatarVersion += 1)}
-      {avatarVersion}
-      bind:restoreLastLocation
-      bind:enterToSend
-    />
-
     <Chatbar
       msgs={$msgs}
       bind:txt
@@ -527,6 +511,23 @@
     />
   </main>
 </div>
+
+<InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
+    <AdminPanel bind:show={showAdmin} />
+    <ProfileDialog bind:show={showProfile} username={profileUsername} {avatarVersion} onEditProfile={editOwnProfile} />
+
+    <SettingsModal
+      bind:show={showSettings}
+      onClose={closeSettings}
+      onLogout={logout}
+      {theme}
+      onToggleTheme={toggleTheme}
+      onAvatarChanged={() => (avatarVersion += 1)}
+      {avatarVersion}
+      bind:restoreLastLocation
+      bind:enterToSend
+    />
+
 {:else}
   <HomePage />
 {/if}
