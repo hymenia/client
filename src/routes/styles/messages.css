@@ -72,28 +72,39 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.msg-reply-btn {
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  background: var(--bg-primary, #fff);
-  color: var(--text-secondary, #666);
-  cursor: pointer;
+.message-context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 168px;
+  padding: 4px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.16));
   border-radius: 8px;
-  opacity: 0;
+  background: var(--opaque-primary, var(--bg-primary, #fff));
+}
+.message-context-menu button {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: opacity 0.1s;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-primary, #222);
+  text-align: left;
+  cursor: pointer;
 }
-.msg:hover .msg-reply-btn {
-  opacity: 1;
+.message-context-menu button:hover {
+  background: var(--bg-active, rgba(0, 0, 0, 0.08));
 }
-.msg-reply-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0 !important;
+.message-context-menu .message-context-delete {
+  color: var(--danger, #c33);
+}
+.message-context-menu p {
+  max-width: 220px;
+  margin: 4px 8px;
+  color: var(--danger, #c33);
+  font-size: 12px;
 }
 .reply-bar {
   display: flex;
@@ -156,4 +167,36 @@
 
 .msg-grouped {
   padding-top: 0;
+}
+
+.md-header {
+  margin: 0.5em 0 0.2em;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.md-h1 { font-size: 1.4em; }
+.md-h2 { font-size: 1.2em; }
+.md-h3 { font-size: 1.05em; }
+
+.md-quote {
+  display: block;
+  margin: 6px 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--border-color, rgba(0, 0, 0, 0.2));
+  background: var(--bg-secondary, rgba(0, 0, 0, 0.04));
+  border-radius: 6px;
+  font-size: inherit;
+  color: var(--text-secondary, #666);
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+@media (pointer: coarse) {
+  .msg {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
 }

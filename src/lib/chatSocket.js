@@ -45,7 +45,7 @@ export function connectChatSocket(token, { onOpen, onMessage }) {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data && data.sender && (data.content || data.attachments?.length)) {
+        if (data?.event === 'message_deleted' || (data && data.sender && (data.content || data.attachments?.length))) {
           onMessage(data);
         }
       } catch {

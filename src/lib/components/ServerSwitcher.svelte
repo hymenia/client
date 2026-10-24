@@ -87,7 +87,7 @@
 {:else}
   <div class="setting-block passkey-settings">
     <h3>Server</h3>
-    <p class="passkey-hint">Current server: <strong>{API_HOST}</strong></p>
+    <p class="server-switcher-hint">Current server: <strong>{API_HOST}</strong></p>
     {@render serverForm()}
   </div>
 {/if}
@@ -95,9 +95,9 @@
 {#snippet serverForm()}
   <form onsubmit={connectToServer}>
     <div class="form-group">
-      <label for="server-url">Server address</label>
+      <label for="server-switcher-hint">Server address</label>
       <input
-        id="server-url"
+        id="server-switcher-hint"
         type="text"
         bind:value={serverUrl}
         placeholder="https://chat.example.com:9070"
@@ -120,7 +120,7 @@
       </button>
     </div>
   </form>
-  <p class="passkey-hint server-switcher-hint">Switching servers signs you out on this device.</p>
+  <p class="server-switcher-hint">Switching servers signs you out on this device.</p>
   {#if serverError}
     <p class="error" role="alert">{serverError}</p>
   {:else if serverStatus}

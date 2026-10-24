@@ -2,8 +2,10 @@ export function mapServerMessage(row) {
   return {
     id: row.id,
     createdAt: row.created_at || null,
+    userId: row.sender_id || row.user_id || null,
     sender: row.sender || 'Unknown',
     senderDisplayName: row.sender_display_name || row.sender || 'Unknown',
+    senderAvatarUrl: row.sender_avatar_url || null,
     senderGlobalRoles: row.sender_global_roles || [],
     senderIsApp: row.sender_is_bot || false,
     content: row.content,

@@ -17,7 +17,10 @@
     onLoadOlder = undefined,
     onSend = undefined,
     onAttach = undefined,
-    onProfileClick = undefined
+    onProfileClick = undefined,
+    currentUsername = null,
+    canDeleteAny = false,
+    onDelete = undefined
   } = $props();
 
   let composerEl = $state(null);
@@ -72,6 +75,9 @@
     {loadingOlder}
     {onLoadOlder}
     {onProfileClick}
+    {currentUsername}
+    {canDeleteAny}
+    {onDelete}
     onReply={(message) => (replyingTo = message)}
   />
 

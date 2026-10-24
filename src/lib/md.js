@@ -40,6 +40,23 @@ export function renderMarkdown(input) {
     return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`) + trailing;
   });
 
+  text = text.replace(
+    /^(#{1,3})[ \t]+(.+?)[ \t]*(?:\n|$)/gm,
+    (_, hashes, content) => {
+      const level = hashes.length;
+      return `<h${level} class="md-header md-h${level}">${content}</h${level}>`;
+    }
+  );
+
+  text = text.replace(/^(?:&gt;[ \t]?.*(?:\n|$))+/gm, (block) => {
+  const inner = block
+    .replace(/\n$/, '')
+    .split('\n')
+    .map((line) => line.replace(/^&gt;[ \t]?/, ''))
+    .join('\n');
+  return `<blockquote class="md-quote">${inner}</blockquote>`;
+});
+
   text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/__([^_\n]+)__/g, '<u>$1</u>');
   text = text.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');

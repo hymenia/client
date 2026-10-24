@@ -45,6 +45,9 @@ export const createChat = (token, spaceId, name, type) =>
 export const acceptInvite = (token, code) =>
   request(`/api/invites/${encodeURIComponent(code)}/accept`, { method: 'POST', token, fallback: 'Could not join with that invite' });
 
+export const deleteMessage = (token, messageId) =>
+  request(`/api/messages/${encodeURIComponent(messageId)}`, { method: 'DELETE', token, fallback: 'Could not delete message' });
+
 
 export async function uploadAttachment(token, chatId, file) {
   const res = await fetch(`${API_HOST}/api/chats/${chatId}/attachments`, {

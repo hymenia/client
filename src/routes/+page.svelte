@@ -4,6 +4,7 @@
       acceptInvite,
       createChat,
       createSpace,
+      deleteMessage,
       fetchChats,
       fetchMessages,
       fetchSpaces,
@@ -17,6 +18,7 @@
       socketOpen,
       socketSend
   } from '$lib/chatSocket.js';
+  import AdminPanel from '$lib/components/AdminPanel.svelte';
   import Chatbar from '$lib/components/Chatbar.svelte';
   import ChatList from '$lib/components/ChatList.svelte';
   import HomePage from '$lib/components/HomePage.svelte';
@@ -41,6 +43,7 @@
       loadAppearancePrefs,
       setTheme as storeTheme
   } from '$lib/theme.js';
+  import AppWindow from '@lucide/svelte/icons/app-window';
   import ArrowLeft from '@lucide/svelte/icons/arrow-left';
   import SettingsIcon from '@lucide/svelte/icons/settings';
   import UserPlus from '@lucide/svelte/icons/user-plus';
@@ -76,6 +79,7 @@
     $spacesStore.find((s) => s.id === selectedSpaceId)?.role || null
   );
   let canManageSpace = $derived(selectedSpaceRole === 'owner' || selectedSpaceRole === 'admin');
+  let instanceAdmin = $derived($auth.user?.global_roles?.includes('admin') ?? false);
 
   let replyingTo = $state(null);
 
@@ -83,6 +87,7 @@
 
   let showInvite = $state(false);
   let showProfile = $state(false);
+  let showAdmin = $state(false);
   let profileUsername = $state('');
 
   let joinCode = $state('');
@@ -373,6 +378,10 @@
     return connectChatSocket($auth.token, {
       onOpen: () => joinTextChatRooms($chatsStore, selectedChatId),
       onMessage: (data) => {
+        if (data.event === 'message_deleted') {
+          if (String(data.chat_id) === String(selectedChatId)) markMessageDeleted(data.id);
+          return;
+        }
         if (data.chat_id && String(data.chat_id) !== String(selectedChatId)) {
           incrementUnread(data.chat_id);
           return;
@@ -384,6 +393,15 @@
       }
     });
   });
+
+  function markMessageDeleted(messageId) {
+    msgs.update((items) => items.filter((message) => String(message.id) !== String(messageId)));
+  }
+
+  async function deleteChatMessage(message) {
+    await deleteMessage($auth.token, message.id);
+    markMessageDeleted(message.id);
+  }
 
   function send() {
     if (!txt || !selectedChatId || !socketOpen()) {
@@ -464,6 +482,9 @@
         {#if canManageSpace}
           <button type="button" class="theme-btn" onclick={() => showInvite = true}><UserPlus size={16} /> Invite</button>
         {/if}
+        {#if instanceAdmin}
+          <button type="button" class="theme-btn" onclick={() => showAdmin = true}><AppWindow size={16} /> Admin</button>
+        {/if}
         <button type="button" class="theme-btn" onclick={openSettings}><SettingsIcon size={16} /> Settings</button>
       </div>
     </div>
@@ -471,6 +492,7 @@
     <VoiceBar bind:this={voiceBar} bind:voiceChatId />
 
     <InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
+    <AdminPanel bind:show={showAdmin} />
     <ProfileDialog bind:show={showProfile} username={profileUsername} {avatarVersion} onEditProfile={editOwnProfile} />
 
     <SettingsModal
@@ -499,6 +521,9 @@
       onAttach={handleAttach}
       onLoadOlder={loadOlder}
       onProfileClick={openProfile}
+      currentUsername={$auth.user?.username}
+      canDeleteAny={canManageSpace}
+      onDelete={deleteChatMessage}
     />
   </main>
 </div>
