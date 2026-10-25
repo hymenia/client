@@ -161,6 +161,7 @@
     <section>
       <h2>16. Contact</h2>
       <p>Questions or requests about your privacy should be sent to the operator of the Hymenia instance you use.</p>
+      <p>On this instance, you can contact the operator at <a href="mailto:hi@afkdev.me">hi@afkdev.me</a>.</p>
     </section>
   </main>
 </div>
