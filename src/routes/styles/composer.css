@@ -3,6 +3,7 @@
   align-items: flex-end;
   gap: 6px;
   padding: 10px 14px;
+  padding-left: 9px;
   border-top: 1px solid var(--line-soft);
 }
 .chat-view > form input {
