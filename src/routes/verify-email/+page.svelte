@@ -27,6 +27,10 @@
         return;
       }
       success = true;
+      auth.update((cur) => ({
+        ...cur,
+        user: cur.user ? { ...cur.user, email_verified: true } : cur.user
+      }));
       setTimeout(() => goto('/'), 2000);
     } catch (e) {
       error = 'Could not reach server';

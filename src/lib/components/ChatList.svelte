@@ -24,7 +24,7 @@ import X from '@lucide/svelte/icons/x';
   let showNewChat = $state(false);
 </script>
 
-<aside class="col-chats" style="width: {width}px">
+<aside class="col-chats" style:--col-width={`${width}px`}>
   <button type="button" class="mobile-back-btn" onclick={onBack}>
     <ArrowLeft size={18} />
   </button>

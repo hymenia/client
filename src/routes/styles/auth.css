@@ -8,15 +8,15 @@
 }
 
 .auth {
-  font-family: 'Exo 2', system-ui, sans-serif;
+  font-family: 'Adwaita Sans', system-ui, sans-serif;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 40px;
   padding: 32px 40px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  border-radius: 16px;
-  color: var(--text-primary, #000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-large);
+  color: var(--text);
 }
 
 .auth-logo {
@@ -28,7 +28,7 @@
 .auth-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap);
   width: 320px;
 }
 
@@ -49,34 +49,34 @@
 .auth form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap);
 }
 
 .auth input:not([type="checkbox"]) {
-  height: var(--control-height);
+  height: var(--field-height);
   padding: 0 12px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  border-radius: var(--control-radius);
-  font-size: var(--control-font-size);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: var(--radius);
+  font-size: var(--font-size);
   box-sizing: border-box;
 }
 
 .auth input::placeholder {
-  color: #999;
+  color: var(--placeholder);
   opacity: 1;
 }
 
 .auth button {
-  height: var(--control-height);
+  height: var(--field-height);
   padding: 0 16px;
-  background: var(--btn-bg, #eee);
-  color: var(--text-primary, #000);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  background: var(--button);
+  color: var(--text);
+  border: 1px solid var(--line);
   cursor: pointer;
-  border-radius: var(--control-radius);
-  font-size: var(--control-font-size);
+  border-radius: var(--radius);
+  font-size: var(--font-size);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -85,7 +85,7 @@
 }
 
 .auth button:hover {
-  background: var(--btn-hover, #ddd);
+  background: var(--button-hover);
 }
 
 .auth a {
@@ -93,7 +93,7 @@
 }
 
 .err {
-  color: #ff6b6b;
+  color: var(--danger);
   margin: 0;
 }
 
@@ -109,8 +109,8 @@
 .auth-policy {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  font-size: var(--control-font-size);
+  gap: var(--gap);
+  font-size: var(--font-size);
   line-height: 1.4;
 }
 

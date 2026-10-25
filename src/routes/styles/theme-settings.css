@@ -10,17 +10,17 @@
   margin-top: 4px;
 }
 .theme-btn {
-  min-height: var(--control-height);
+  min-height: var(--field-height);
   height: auto;
   min-width: fit-content;
   padding: 10px 22px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
-  background: var(--btn-bg, #eee);
-  color: var(--text-primary, #000);
+  border: 1px solid var(--line);
+  background: var(--button);
+  color: var(--text);
   cursor: pointer;
   font-weight: 500;
-  font-size: var(--control-font-size);
-  border-radius: var(--control-radius);
+  font-size: var(--font-size);
+  border-radius: var(--radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -32,7 +32,7 @@
   line-height: 1;
 }
 .theme-btn:hover {
-  background: var(--btn-hover, #ddd);
+  background: var(--button-hover);
 }
 .theme-btn:disabled {
   opacity: 0.5;
@@ -41,13 +41,70 @@
 .theme-btn.active {
   background: var(--accent);
   border-color: var(--accent);
-  color: var(--accent-text);
+  color: var(--text-on-accent);
 }
 .theme-btn.icon-btn {
-  min-width: var(--control-height);
-  min-height: var(--control-height);
+  min-width: var(--field-height);
+  min-height: var(--field-height);
   width: auto;
   height: auto;
   padding: 10px 14px;
   flex-shrink: 0;
+}
+
+.setting-block + .setting-block {
+  margin-top: 20px;
+}
+
+.tokens-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.token-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.token-row {
+  display: grid;
+  grid-template-columns: 1fr 22px 1.4fr;
+  align-items: center;
+  gap: var(--gap);
+  font-size: var(--font-size-small);
+}
+
+.token-name {
+  font-family: ui-monospace, monospace;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.token-swatch {
+  width: 22px;
+  height: 22px;
+  background: var(--swatch);
+  border-radius: var(--radius-small);
+  border: 1px solid var(--line);
+}
+
+.token-row input {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-family: 'Consolas', 'Courier New', ui-monospace, monospace;
+  font-size: var(--font-size-tiny);
+  min-width: 0;
 }

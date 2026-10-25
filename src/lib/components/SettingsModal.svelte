@@ -61,7 +61,7 @@ import LogOut from '@lucide/svelte/icons/log-out';
         >
           <Code size={16} /> Developer
         </button>
-        <div class="settings-nav-spacer flex-grow"></div>
+        <div class="settings-nav-spacer"></div>
         <button
           type="button"
           class="settings-nav-item logout-tab"

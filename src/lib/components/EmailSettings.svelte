@@ -25,6 +25,10 @@
         email = data.email || '';
         verified = data.verified;
         verifiedAt = data.verifiedAt;
+        auth.update((cur) => ({
+          ...cur,
+          user: cur.user ? { ...cur.user, email_verified: verified } : cur.user
+        }));
       }
     } catch (e) {
       console.error('failed to load email', e);

@@ -16,8 +16,8 @@
   <div
     class="message-context-menu"
     role="menu"
-    style:left={`${menu.x}px`}
-    style:top={`${menu.y}px`}
+    style:--menu-x={`${menu.x}px`}
+    style:--menu-y={`${menu.y}px`}
   >
     {#each menu.items as item}
       <button

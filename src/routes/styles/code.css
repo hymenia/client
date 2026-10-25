@@ -1,27 +1,15 @@
-:root {
-  --code-bg: var(--bg-secondary);
-  --code-text: #d63384;
-  --code-block-bg: #f8f9fa;
-  --code-block-border: rgba(0, 0, 0, 0.1);
-}
-body.dark {
-  --code-bg: var(--bg-secondary);
-  --code-text: #ff79c6;
-  --code-block-bg: #2d2d2d;
-  --code-block-border: rgba(255, 255, 255, 0.1);
-}
 code {
   font-family: Consolas, "Courier New", monospace;
   font-size: 105%;
   color: var(--code-text);
-  background-color: var(--code-bg);
+  background-color: var(--panel-soft);
   padding: 2px 6px;
-  border-radius: calc(var(--control-radius) - 4px);
+  border-radius: var(--radius-small);
 }
 pre {
-  background-color: var(--code-block-bg);
+  background-color: var(--code-block);
   border: 1px solid var(--code-block-border);
-  border-radius: var(--control-radius);
+  border-radius: var(--radius);
   padding: 12px;
   margin: 8px 0;
   overflow-x: auto;
@@ -36,7 +24,7 @@ pre code {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
-  font-size: 13px;
+  font-size: var(--font-size-small);
   display: block;
   white-space: pre;
 }

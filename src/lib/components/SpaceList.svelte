@@ -16,13 +16,14 @@
     onJoin,
     newSpaceName = $bindable(''),
     newSpaceVisibility = $bindable('private'),
-    joinCode = $bindable('')
+    joinCode = $bindable(''),
+    emailVerified = true
   } = $props();
 
   let showNewSpace = $state(false);
 </script>
 
-<aside class="col-spaces" style="width: {width}px">
+<aside class="col-spaces" style:--col-width={`${width}px`}>
   <button type="button" class="sidebar-new-btn" onclick={() => (showNewSpace = true)}>
     <Plus size={16} />
     <span>New space</span>

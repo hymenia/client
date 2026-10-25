@@ -1,9 +1,9 @@
 <script>
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { auth } from '$lib/stores.js';
   import { API_HOST } from '$lib/config.js';
+  import { auth } from '$lib/stores.js';
+  import { onMount } from 'svelte';
 
   let status = $state('joining');
   let message = $state('');
@@ -48,6 +48,9 @@
       <p class="redirect-note">Taking you there now...</p>
     {:else}
       <p class="error">{message}</p>
+      {#if message.toLowerCase().includes('verification')}
+        <p class="redirect-note">Please check your inbox to verify your email address before joining</p>
+      {/if}
       <a href="/">Go back home</a>
     {/if}
   </div>

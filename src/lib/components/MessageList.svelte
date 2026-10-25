@@ -269,8 +269,8 @@
     <div
       class="message-context-menu"
       role="menu"
-      style:left={`${contextMenu.x}px`}
-      style:top={`${contextMenu.y}px`}
+      style:--menu-x={`${contextMenu.x}px`}
+      style:--menu-y={`${contextMenu.y}px`}
       onclick={(event) => event.stopPropagation()}
       oncontextmenu={(event) => event.preventDefault()}
     >

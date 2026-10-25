@@ -9,9 +9,9 @@
   max-width: 720px;
   height: fit-content;
   padding: 24px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  border-radius: 16px;
-  color: var(--text-primary, #000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-large);
+  color: var(--text);
   line-height: 1.55;
 }
 .legal-card .theme-btn {
@@ -24,8 +24,8 @@
 }
 .legal-updated {
   margin: 0 0 24px;
-  color: var(--text-secondary, #777);
-  font-size: 13px;
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
 }
 .legal-card section + section {
   margin-top: 24px;
@@ -36,7 +36,7 @@
 }
 .legal-card p,
 .legal-card li {
-  font-size: var(--control-font-size);
+  font-size: var(--font-size);
 }
 .legal-card p {
   margin: 0 0 8px;

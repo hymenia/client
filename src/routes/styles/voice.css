@@ -2,14 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--gap);
   padding: 8px 14px;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  background: var(--bg-secondary, rgba(0, 0, 0, 0.04));
-  font-size: 13px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--panel-soft);
+  font-size: var(--font-size-small);
 }
 .voice-speaking {
-  color: var(--accent, #2fb380);
+  color: var(--accent);
   font-weight: 600;
 }
 .voice-bar-label {
@@ -19,15 +19,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--text-secondary, #555);
+  color: var(--text-muted);
 }
 .voice-bar-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--gap);
   flex-shrink: 0;
 }
 .voice-bar-error {
-  color: #ff6b6b;
+  color: var(--danger);
 }
 .voice-joined-marker {
   font-size: 10px;

@@ -1,3 +1,6 @@
+import { shortcodeToEmoji } from '$lib/shortcodes.js';
+import twemoji from '@twemoji/api';
+
 function escapeHtml(str) {
   return str
     .replace(/&/g, '&amp;')
@@ -40,6 +43,7 @@ export function renderMarkdown(input) {
     return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`) + trailing;
   });
 
+  // # to ###
   text = text.replace(
     /^(#{1,3})[ \t]+(.+?)[ \t]*(?:\n|$)/gm,
     (_, hashes, content) => {
@@ -48,14 +52,15 @@ export function renderMarkdown(input) {
     }
   );
 
+  // multiple > merge into one
   text = text.replace(/^(?:&gt;[ \t]?.*(?:\n|$))+/gm, (block) => {
-  const inner = block
-    .replace(/\n$/, '')
-    .split('\n')
-    .map((line) => line.replace(/^&gt;[ \t]?/, ''))
-    .join('\n');
-  return `<blockquote class="md-quote">${inner}</blockquote>`;
-});
+    const inner = block
+      .replace(/\n$/, '')
+      .split('\n')
+      .map((line) => line.replace(/^&gt;[ \t]?/, ''))
+      .join('\n');
+    return `<blockquote class="md-quote">${inner}</blockquote>`;
+  });
 
   text = text.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/__([^_\n]+)__/g, '<u>$1</u>');
@@ -63,6 +68,10 @@ export function renderMarkdown(input) {
   text = text.replace(/(?<![a-zA-Z0-9])_([^_\n]+)_(?![a-zA-Z0-9])/g, '<em>$1</em>');
   text = text.replace(/~~([^~\n]+)~~/g, '<del>$1</del>');
   text = text.replace(/\n/g, '<br>');
+
+  text = text.replace(/:([a-z0-9_+-]+):/g, (match, name) => shortcodeToEmoji(name) ?? match);
+
+  text = twemoji.parse(text, { folder: 'svg', ext: '.svg', className: 'emoji' });
 
   text = text.replace(/\u0000(\d+)\u0000/g, (_, i) => blocks[Number(i)]);
   return text;

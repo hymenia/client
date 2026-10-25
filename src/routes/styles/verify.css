@@ -4,15 +4,15 @@
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  background: var(--bg-primary, #fff);
+  background: var(--panel);
 }
 .verify-card {
   width: 100%;
   max-width: 400px;
   padding: 30px;
-  background: var(--bg-secondary, #f5f5f5);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-  border-radius: 10px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
 }
 .verify-page .setting-block {
   margin-bottom: 20px;
@@ -23,19 +23,19 @@
 }
 .verify-page .setting-block p {
   margin: 0;
-  font-size: 14px;
-  color: var(--text-secondary, #666);
+  font-size: var(--font-size);
+  color: var(--text-muted);
 }
 .verify-page .success {
-  color: #4caf50;
+  color: var(--success);
 }
 .verify-page .error {
-  color: #ff6b6b;
+  color: var(--danger);
 }
 .verify-page .redirect-msg {
   text-align: center;
-  color: var(--text-secondary, #666);
-  font-size: 13px;
+  color: var(--text-muted);
+  font-size: var(--font-size-small);
 }
 .verify-card button {
   width: 100%;

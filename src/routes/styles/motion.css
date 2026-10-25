@@ -1,13 +1,7 @@
-:root {
-  --motion-fast: 140ms;
-  --motion-normal: 220ms;
-  --motion-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
-}
-
 body {
   transition:
-    background-color var(--motion-normal) var(--motion-ease),
-    color var(--motion-normal) var(--motion-ease);
+    background-color var(--speed) var(--ease),
+    color var(--speed) var(--ease);
 }
 
 button,
@@ -22,8 +16,8 @@ textarea,
 .col-spaces,
 .col-chats,
 .col-chat {
-  transition-duration: var(--motion-fast);
-  transition-timing-function: var(--motion-ease);
+  transition-duration: var(--speed);
+  transition-timing-function: var(--ease);
 }
 
 button:not(:disabled) {
@@ -53,7 +47,7 @@ textarea:focus {
 
 .app-layout,
 .landing-card {
-  animation: motion-rise-in 320ms var(--motion-ease) both;
+  animation: motion-rise-in 320ms var(--ease) both;
 }
 
 .settings-backdrop,
@@ -65,7 +59,7 @@ textarea:focus {
 .settings-modal,
 .profile-card,
 .sidebar-dialog {
-  animation: motion-pop-in 220ms var(--motion-ease) both;
+  animation: motion-pop-in 220ms var(--ease) both;
 }
 
 .space-item,

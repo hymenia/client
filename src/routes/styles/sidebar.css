@@ -2,37 +2,37 @@
   display: flex;
   gap: 4px;
   padding: 10px 8px;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-bottom: 1px solid var(--line-soft);
   align-items: center;
-  min-height: var(--control-height);
+  min-height: var(--field-height);
   box-sizing: border-box;
 }
 .create-form input,
 .create-form select {
   min-width: 0;
   flex: 1;
-  height: var(--control-height);
+  height: var(--field-height);
   padding: 0 10px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  border-radius: var(--control-radius);
-  font-size: var(--control-font-size);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: var(--radius);
+  font-size: var(--font-size);
   box-sizing: border-box;
 }
 .create-form input::placeholder {
-  color: #999;
+  color: var(--placeholder);
   opacity: 1;
 }
 .create-form button {
-  width: var(--control-height);
-  height: var(--control-height);
+  width: var(--field-height);
+  height: var(--field-height);
   flex-shrink: 0;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  background: var(--btn-bg, #eee);
-  color: var(--text-primary, #000);
+  border: 1px solid var(--line);
+  background: var(--button);
+  color: var(--text);
   cursor: pointer;
-  border-radius: var(--control-radius);
+  border-radius: var(--radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@
   box-sizing: border-box;
 }
 .create-form button:hover {
-  background: var(--btn-hover, #ddd);
+  background: var(--button-hover);
 }
 .create-form button:disabled,
 .create-form input:disabled,
@@ -50,13 +50,13 @@
 }
 .space-item,
 .chat-item {
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  border-color: var(--border-color, rgba(0, 0, 0, 0.08));
+  background: var(--panel);
+  color: var(--text);
+  border-color: var(--line-soft);
 }
 .space-item:hover,
 .chat-item:hover {
-  background: var(--bg-secondary, #f0f0f0);
+  background: var(--panel-soft);
 }
 .space-item.active,
 .chat-item.active {
@@ -72,17 +72,17 @@
   padding: 8px 10px;
   border: none;
   text-align: left;
-  font-size: 14px;
+  font-size: var(--font-size);
   cursor: pointer;
   word-break: break-word;
-  border-radius: var(--control-radius, 10px);
+  border-radius: var(--radius);
 }
 .space-name {
   flex: 1;
   min-width: 0;
 }
 .space-item.active {
-  background: var(--accent-soft, rgba(47, 179, 128, 0.14));
+  background: var(--accent-soft);
   color: var(--accent);
   font-weight: 600;
 }
@@ -100,20 +100,20 @@
   padding: 8px 10px;
   border: none;
   text-align: left;
-  font-size: 14px;
+  font-size: var(--font-size);
   cursor: pointer;
   word-break: break-word;
-  border-radius: var(--control-radius, 10px);
+  border-radius: var(--radius);
 }
 .chat-item.active {
-  background: var(--accent-soft, rgba(47, 179, 128, 0.14));
+  background: var(--accent-soft);
   color: var(--accent);
   font-weight: 600;
 }
 .text-marker {
   font-weight: 600;
   font-size: 15px;
-  color: var(--text-secondary, #333);
+  color: var(--text-muted);
 }
 .chat-name {
   flex: 1;
@@ -123,9 +123,9 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--accent);
-  color: var(--accent-text);
+  color: var(--text-on-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -137,10 +137,10 @@
   width: calc(100% - 16px);
   margin: 2px 8px;
   padding: 8px 10px;
-  color: #777;
+  color: var(--text-muted);
   font-style: italic;
-  font-size: 13px;
-  border-radius: var(--control-radius, 10px);
+  font-size: var(--font-size-small);
+  border-radius: var(--radius);
 }
 .sidebar-new-btn {
   display: flex;
@@ -149,19 +149,19 @@
   width: calc(100% - 16px);
   margin: 8px 8px 2px;
   padding: 10px;
-  min-height: var(--control-height);
+  min-height: var(--field-height);
   border: none;
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  font-size: 14px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--font-size);
   font-weight: 600;
   text-align: left;
   cursor: pointer;
   box-sizing: border-box;
-  border-radius: var(--control-radius, 10px);
+  border-radius: var(--radius);
 }
 .sidebar-new-btn:hover {
-  background: var(--bg-secondary, #f0f0f0);
+  background: var(--panel-soft);
 }
 .sidebar-new-btn:disabled {
   cursor: not-allowed;
@@ -173,7 +173,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,10 +185,10 @@
   position: relative;
   width: 340px;
   max-width: 100%;
-  background: var(--opaque-primary, rgba(255, 255, 255, 0.85));
-  color: var(--text-primary, #000);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  border-radius: 8px;
+  background: var(--panel-solid);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   overflow: hidden;
   padding: 16px;
   box-sizing: border-box;

@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,44 +18,44 @@
   max-width: 1040px;
   height: 600px;
   background: transparent;
-  color: var(--text-primary, #000);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  color: var(--text);
+  border: 1px solid var(--line);
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: var(--radius-large);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 .settings-sidebar {
   width: 220px;
   flex-shrink: 0;
-  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-right: 1px solid var(--line-soft);
   display: flex;
   flex-direction: column;
-  background: var(--opaque-secondary, rgba(240, 240, 240, 0.85));
+  background: var(--panel-solid-soft);
 }
 .settings-nav-item {
   width: 100%;
   padding: 16px 14px;
   border: none;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  border-bottom: 1px solid var(--line-soft);
   background: transparent;
-  color: var(--text-primary, #000);
+  color: var(--text);
   text-align: left;
   font-size: 16px;
   font-family: inherit;
   cursor: pointer;
   font-weight: 500;
-  transition: background 0.1s;
+  transition: background var(--speed);
   border-radius: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap);
 }
 .settings-nav-item.header-tab {
   font-weight: 600;
 }
 .settings-nav-item:hover {
-  background: var(--bg-active, rgba(0, 0, 0, 0.06));
+  background: var(--hover);
 }
 .settings-nav-item.active {
   background: var(--accent-soft);
@@ -63,13 +63,10 @@
   font-weight: 600;
 }
 .settings-nav-spacer {
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+  flex: 1;
+  border-bottom: 1px solid var(--line-soft);
   min-height: 48px;
   background: transparent;
-}
-.settings-nav-spacer.flex-grow {
-  flex: 1;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
 }
 .settings-nav-item.logout-tab {
   border-bottom: none;
@@ -81,29 +78,29 @@
   flex-direction: column;
   position: relative;
   overflow-y: auto;
-  background: var(--opaque-primary, rgba(255, 255, 255, 0.85));
+  background: var(--panel-solid);
 }
 .close-btn {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: var(--control-height);
-  height: var(--control-height);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
+  width: var(--field-height);
+  height: var(--field-height);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.1s;
-  border-radius: var(--control-radius);
+  transition: background var(--speed);
+  border-radius: var(--radius);
   box-sizing: border-box;
 }
 .close-btn:hover {
-  background: var(--bg-secondary, #f0f0f0);
+  background: var(--panel-soft);
 }
 .settings-inner-body {
   padding: 32px;
@@ -130,26 +127,26 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap);
   margin-bottom: 18px;
   width: 100%;
 }
 .form-group label {
   display: block;
-  font-size: 14px;
+  font-size: var(--font-size);
   font-weight: 500;
   margin-bottom: 4px;
 }
 .form-group input,
 .form-group textarea {
-  height: var(--control-height);
+  height: var(--field-height);
   padding: 10px 14px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  font-size: var(--control-font-size);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--font-size);
   font-family: inherit;
-  border-radius: var(--control-radius);
+  border-radius: var(--radius);
   box-sizing: border-box;
 }
 .form-group textarea {
@@ -160,7 +157,7 @@
 }
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: #999;
+  color: var(--placeholder);
   opacity: 1;
 }
 .form-group input[type='password'] {
@@ -170,8 +167,8 @@
 .setting-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: var(--gap);
+  font-size: var(--font-size);
   cursor: pointer;
 }
 .setting-toggle input {
@@ -182,16 +179,16 @@
 }
 .danger-block {
   padding-top: 20px;
-  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-top: 1px solid var(--line);
 }
 .warn-text {
-  font-size: 13px;
-  color: #ff6b6b;
+  font-size: var(--font-size-small);
+  color: var(--danger);
   margin-bottom: 14px;
 }
 .delete-btn {
-  border-color: #ff6b6b;
-  color: #ff6b6b;
+  border-color: var(--danger);
+  color: var(--danger);
 }
 .delete-btn:hover {
   background: rgba(255, 107, 107, 0.15);
@@ -203,15 +200,15 @@
 .email-settings .setting-block,
 .passkey-settings .setting-block {
   padding: 16px;
-  background: var(--bg-secondary, #f5f5f5);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-  border-radius: 10px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 .email-settings .setting-block h3,
 .passkey-settings .setting-block h3 {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap);
   margin: 0 0 12px;
   font-size: 16px;
 }
@@ -221,42 +218,42 @@
 .passkey-settings .error,
 .passkey-settings .success {
   margin: 8px 0 0;
-  font-size: 13px;
+  font-size: var(--font-size-small);
 }
 .email-settings .error,
 .passkey-settings .error {
-  color: #ff6b6b;
+  color: var(--danger);
 }
 .email-settings .success,
 .passkey-settings .success {
-  color: #4caf50;
+  color: var(--success);
 }
 .email-settings .loading {
-  color: var(--text-secondary, #666);
+  color: var(--text-muted);
 }
 .passkey-settings .passkey-hint {
   margin: 0 0 12px;
-  font-size: 13px;
-  color: var(--text-secondary, #666);
+  font-size: var(--font-size-small);
+  color: var(--text-muted);
 }
 .email-settings .email-form {
   display: flex;
-  gap: 8px;
+  gap: var(--gap);
   margin-bottom: 12px;
 }
 .email-settings .email-form input {
   flex: 1;
-  height: var(--control-height, 36px);
+  height: var(--field-height);
   padding: 0 12px;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #000);
-  font-size: var(--control-font-size, 14px);
-  border-radius: var(--control-radius, 6px);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--font-size);
+  border-radius: var(--radius);
   box-sizing: border-box;
 }
 .email-settings .email-form input::placeholder {
-  color: #999;
+  color: var(--placeholder);
 }
 .email-settings .email-form button {
   flex-shrink: 0;
@@ -265,19 +262,19 @@
 .email-settings .unverified-status {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap);
   padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: var(--radius-small);
+  font-size: var(--font-size-small);
   margin-bottom: 8px;
 }
 .email-settings .verified-status {
   background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
+  color: var(--success);
 }
 .email-settings .unverified-status {
   background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
+  color: var(--warning);
 }
 .server-switcher-compact details > summary {
   margin-bottom: 8px;

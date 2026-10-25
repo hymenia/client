@@ -31,7 +31,7 @@
     padding: 8px 10px;
     border: none;
     background: transparent;
-    color: var(--text-primary, #000);
+    color: var(--text);
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -41,10 +41,10 @@
     display: flex;
   }
   .col-chats .mobile-back-btn {
-    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+    border-bottom: 1px solid var(--line-soft);
   }
   .bar {
-    gap: 8px;
+    gap: var(--gap);
   }
   .bar .bar-user {
     min-width: 0;
@@ -82,19 +82,19 @@
     touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
     border-right: none;
-    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+    border-bottom: 1px solid var(--line-soft);
   }
   .settings-nav-item {
     width: auto;
     flex-shrink: 0;
     white-space: nowrap;
     border-bottom: none;
-    border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    border-right: 1px solid var(--line-soft);
   }
   .settings-nav-item.logout-tab {
     border-right: none;
   }
-  .settings-nav-spacer.flex-grow {
+  .settings-nav-spacer {
     display: none;
   }
   .settings-inner-body {
@@ -107,8 +107,8 @@
     right: 8px;
   }
   :root {
-    --control-height: 44px;
-    --control-font-size: 16px;
+    --field-height: 44px;
+    --font-size: 16px;
   }
   .chat-item,
   .space-item {

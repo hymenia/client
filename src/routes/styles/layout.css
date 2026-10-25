@@ -2,10 +2,10 @@
   display: flex;
   width: 100vw;
   height: 100vh;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  border: 1px solid var(--line);
   box-sizing: border-box;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: var(--radius-large);
 }
 .app-layout.resizing {
   cursor: col-resize;
@@ -19,15 +19,16 @@
   touch-action: none;
 }
 .col-divider:hover {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--line);
 }
 .app-layout.resizing .col-divider {
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--line);
 }
 
 .col-spaces {
   flex-shrink: 0;
-  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  width: var(--col-width);
+  border-right: 1px solid var(--line-soft);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -35,7 +36,8 @@
 }
 .col-chats {
   flex-shrink: 0;
-  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  width: var(--col-width);
+  border-right: 1px solid var(--line-soft);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -69,18 +71,50 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  min-height: calc(var(--control-height) + 20px);
+  border-bottom: 1px solid var(--line-soft);
+  min-height: calc(var(--field-height) + 20px);
   box-sizing: border-box;
 }
 .bar-user {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap);
+  flex: 1;
+  min-width: 0;
 }
 .bar-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--gap);
+}
+
+.inline-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-small);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inline-notice-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  flex-shrink: 0;
+}
+
+.inline-notice-link:hover {
+  color: var(--accent-hover);
+  text-decoration: none;
 }
 .list {
   flex: 1;

@@ -7,9 +7,9 @@
 .avatar-preview,
 .msg-avatar,
 .bar-avatar {
-  border-radius: 50%;
+  border-radius: var(--avatar-radius);
   object-fit: cover;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+  border: 1px solid var(--line);
   flex-shrink: 0;
 }
 .avatar-preview {
@@ -39,7 +39,7 @@
 .avatar-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap);
 }
 .avatar-upload-label {
   cursor: pointer;

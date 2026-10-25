@@ -39,7 +39,6 @@
   } from '$lib/resize.svelte.js';
   import { auth, chats as chatsStore, messages as msgs, spaces as spacesStore } from '$lib/stores.js';
   import {
-      applyAccent,
       loadAppearancePrefs,
       setTheme as storeTheme
   } from '$lib/theme.js';
@@ -93,6 +92,7 @@
   let joinCode = $state('');
   let joinErr = $state('');
   let joinSuccess = $state('');
+  let chatError = $state('');
 
   function handleSpaceClick(spaceId) {
     selectSpace(spaceId);
@@ -127,6 +127,10 @@
     joinSuccess = '';
     const raw = joinCode.trim();
     if (!raw) return;
+    if ($auth.user && $auth.user.email_verified === false) {
+      joinErr = 'Please verify your email address to join a space';
+      return;
+    }
     // a full invite link works too
     const code = raw.includes('/invite/') ? raw.split('/invite/').pop().split(/[?#]/)[0] : raw;
 
@@ -321,6 +325,10 @@
     const name = newSpaceName.trim();
     if (!name) return;
     createErr = '';
+    if ($auth.user && $auth.user.email_verified === false) {
+      createErr = 'Please verify your email address to create a space';
+      return;
+    }
 
     try {
       const data = await createSpace($auth.token, name, newSpaceVisibility);
@@ -351,6 +359,9 @@
 
   async function handleAttach(file) {
     if (!selectedChatId || !file) return;
+    if ($auth.user && $auth.user.email_verified === false) {
+      throw new Error('Please verify your email address to send attachments');
+    }
     await uploadAttachment($auth.token, selectedChatId, file);
   }
 
@@ -365,7 +376,6 @@
     if (prefs.theme) {
       theme = storeTheme(prefs.theme);
     }
-    applyAccent(theme);
 
     const profile = await fetchProfile($auth.token);
     if (profile) {
@@ -377,6 +387,9 @@
   $effect(() => {
     return connectChatSocket($auth.token, {
       onOpen: () => joinTextChatRooms($chatsStore, selectedChatId),
+      onError: (err) => {
+        chatError = err;
+      },
       onMessage: (data) => {
         if (data.event === 'message_deleted') {
           if (String(data.chat_id) === String(selectedChatId)) markMessageDeleted(data.id);
@@ -394,6 +407,11 @@
     });
   });
 
+  $effect(() => {
+    selectedChatId;
+    chatError = '';
+  });
+
   function markMessageDeleted(messageId) {
     msgs.update((items) => items.filter((message) => String(message.id) !== String(messageId)));
   }
@@ -407,6 +425,11 @@
     if (!txt || !selectedChatId || !socketOpen()) {
       return;
     }
+    if ($auth.user && $auth.user.email_verified === false) {
+      chatError = 'Please verify your email address to send messages';
+      return;
+    }
+    chatError = '';
     const payload = { content: txt };
     if (replyingTo) {
       payload.reply_to_id = replyingTo.id;
@@ -448,6 +471,7 @@
     bind:newSpaceName
     bind:newSpaceVisibility
     bind:joinCode
+    emailVerified={$auth.user?.email_verified ?? true}
   />
 
   <div class="col-divider" role="separator" onpointerdown={startResize('spaces')}></div>
@@ -475,8 +499,12 @@
         <ArrowLeft size={18} />
       </button>
       <div class="bar-user">
-        <img src={avatarSrc($auth.user?.username, true)} alt="you" class="bar-avatar" />
-        <span>Hello, {$auth.user?.display_name || $auth.user?.username}!</span>
+        {#if $auth.user?.email_verified === false}
+          <span class="inline-notice">
+            Your email isn't verified
+            <button type="button" class="inline-notice-link" onclick={openSettings}>Verify now</button>
+          </span>
+        {/if}
       </div>
       <div class="bar-actions">
         {#if canManageSpace}
@@ -508,6 +536,8 @@
       currentUsername={$auth.user?.username}
       canDeleteAny={canManageSpace}
       onDelete={deleteChatMessage}
+      emailVerified={$auth.user?.email_verified ?? true}
+      {chatError}
     />
   </main>
 </div>
