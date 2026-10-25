@@ -42,7 +42,7 @@ the server `PORT` is not 9070, set the matching port:
 ```sh
 PUBLIC_API_PORT=9080
 ```
-We assume the [backend](https://github.com/hymenia/backend) you are using has Altcha configured correctly.
+We assume the [backend](https://github.com/hymenia/server) you are using has Altcha configured correctly.
 
 ## Commands
 
