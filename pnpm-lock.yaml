@@ -178,6 +178,9 @@ importers:
       '@twemoji/api':
         specifier: ^17.0.3
         version: 17.0.3
+      altcha:
+        specifier: ^3.5.0
+        version: 3.5.0
       emoji-picker-element:
         specifier: ^1.29.1
         version: 1.29.1
@@ -403,6 +406,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  altcha@3.5.0:
+    resolution: {integrity: sha512-wBXNK1bBeWs/XTOZiyE3JQvRNECgFKYEJqcPxFW7tFd7ErG62yQmMlRasygZrza3zyNTTuon3BfMF/PcBcepcw==}
+
   aria-query@5.3.1:
     resolution: {integrity: sha512-Z/ZeOgVl7bcSYZ/u/rh0fOpvEpq//LZmdbkXyc7syVzjPAhfOa9ebsdTSjEBDU4vs5nC98Kfduj1uFo0qyET3g==}
     engines: {node: '>= 0.4'}
@@ -471,6 +477,9 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+
+  hash-wasm@4.12.0:
+    resolution: {integrity: sha512-+/2B2rYLb48I/evdOIhP+K/DD2ca2fgBjp6O+GBEnCDk2e4rpeXIK8GvIyRPjTezgmWn9gmKwkQjjx6BtqDHVQ==}
 
   is-reference@3.0.3:
     resolution: {integrity: sha512-ixkJoqQvAP88E6wLydLGGqCJsrFUnqoH6HnaczB8XmDH1oaWU+xxdptvikTgaEhtZ53Ky6YXiBuUI2WXLMCwjw==}
@@ -856,6 +865,10 @@ snapshots:
 
   acorn@8.18.0: {}
 
+  altcha@3.5.0:
+    dependencies:
+      hash-wasm: 4.12.0
+
   aria-query@5.3.1: {}
 
   axobject-query@4.1.0: {}
@@ -896,6 +909,8 @@ snapshots:
     optional: true
 
   graceful-fs@4.2.11: {}
+
+  hash-wasm@4.12.0: {}
 
   is-reference@3.0.3:
     dependencies:

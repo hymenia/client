@@ -3,6 +3,7 @@
   import ServerSwitcher from '$lib/components/ServerSwitcher.svelte';
   import { API_HOST } from '$lib/config.js';
   import { auth } from '$lib/stores.js';
+  import 'altcha';
   import { onMount } from 'svelte';
 
   let username = $state('');
@@ -11,58 +12,27 @@
   let birthday = $state('');
   let agreedToPolicies = $state(false);
   let err = $state('');
-  let hcaptchaEnabled = $state(!!import.meta.env.PUBLIC_HCAPTCHA_SITEKEY);
-  let hcaptchaSitekey = $state(import.meta.env.PUBLIC_HCAPTCHA_SITEKEY || '');
-  let hcaptchaToken = $state('');
+  let altchaPayload = $state('');
+  let widget = $state(null);
 
-  async function loadHCaptcha() {
-    try {
-      let res = await fetch(`${API_HOST}/api/auth/hcaptcha`);
-      if (res.ok) {
-        let data = await res.json();
-        if (data?.sitekey) {
-          hcaptchaSitekey = data.sitekey;
-        }
-        if (typeof data?.enabled === 'boolean') {
-          hcaptchaEnabled = data.enabled || !!hcaptchaSitekey;
-        }
-      }
-    } catch (e) {
-      console.warn('hcaptcha load failed', e);
-    }
-    renderHCaptcha();
-  }
+  const challengeUrl = `${API_HOST}/api/auth/altcha/challenge`;
 
-  function renderHCaptcha() {
-    if (!hcaptchaEnabled || !hcaptchaSitekey || typeof window === 'undefined') return;
-    if (!window.hcaptcha) {
-      setTimeout(renderHCaptcha, 100);
-      return;
-    }
-    try {
-      let el = document.getElementById('hcaptcha-widget');
-      if (!el || el.children.length > 0) return;
-      window.hcaptcha.render('hcaptcha-widget', {
-        sitekey: hcaptchaSitekey,
-        callback: (token) => { hcaptchaToken = token; },
-        'expired-callback': () => { hcaptchaToken = ''; },
-        'error-callback': () => { hcaptchaToken = ''; }
-      });
-    } catch (e) {
-      console.warn('hcaptcha render failed', e);
-    }
-  }
+  const MIN_AGE = Number(import.meta.env.PUBLIC_MIN_AGE) || 13;
+  const today = new Date().toISOString().split('T')[0];
 
-  onMount(async () => {
+  onMount(() => {
     if ($auth.token) {
       goto('/');
       return;
     }
-    await loadHCaptcha();
-  });
 
-  const MIN_AGE = 13;
-  const today = new Date().toISOString().split('T')[0];
+    const onState = (e) => {
+      if (e.detail.state === 'verified') altchaPayload = e.detail.payload;
+      else altchaPayload = '';
+    };
+    widget?.addEventListener('statechange', onState);
+    return () => widget?.removeEventListener('statechange', onState);
+  });
 
   // does nothing server side
   function isOldEnough(value) {
@@ -75,9 +45,13 @@
     return age >= MIN_AGE;
   }
 
+  function resetCaptcha() {
+    altchaPayload = '';
+    widget?.reset?.();
+  }
+
   async function submitauth() {
     err = '';
-    let body = { username, password };
 
     if (!birthday) {
       err = 'Please enter your date of birth';
@@ -87,7 +61,6 @@
       err = `You must be at least ${MIN_AGE} years old to register`;
       return;
     }
-
     if (!agreedToPolicies) {
       err = 'Please agree to the Terms of Service and Privacy Policy before registering';
       return;
@@ -96,27 +69,28 @@
       err = 'Email is required';
       return;
     }
-    body.email = email.trim();
-
-    if (hcaptchaEnabled) {
-      body.hcaptcha = hcaptchaToken;
+    if (!altchaPayload) {
+      err = 'Please complete the captcha';
+      return;
     }
 
     try {
       let res = await fetch(`${API_HOST}/api/auth/register`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          username,
+          password,
+          email: email.trim(),
+          altcha: altchaPayload
+        })
       });
 
       let data = await res.json();
 
       if (!res.ok) {
         err = data.error || 'Something went wrong... sorry!';
-        if (hcaptchaEnabled && typeof window !== 'undefined' && window.hcaptcha) {
-          try { window.hcaptcha.reset(); } catch (_) {}
-          hcaptchaToken = '';
-        }
+        resetCaptcha();
         return;
       }
 
@@ -153,11 +127,9 @@
           <input type="checkbox" bind:checked={agreedToPolicies} required />
           <span>I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</span>
         </label>
-        {#if hcaptchaEnabled}
-          <div class="hcaptcha-wrap">
-            <div id="hcaptcha-widget"></div>
-          </div>
-        {/if}
+        <div class="hcaptcha-wrap">
+          <altcha-widget bind:this={widget} challenge={challengeUrl}></altcha-widget>
+        </div>
         <button type="submit">Register</button>
       </form>
 
