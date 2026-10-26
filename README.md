@@ -32,17 +32,17 @@ runs on a different port:
 ```sh
 PUBLIC_API_URL=https://api.example.com
 PUBLIC_WS_URL=wss://api.example.com
-PUBLIC_HCAPTCHA_SITEKEY=your-public-hcaptcha-site-key
+PUBLIC_MIN_AGE=13 # not required, but the other ones are
 ```
 
-`PUBLIC_WS_URL` is optional, it follows `PUBLIC_API_URL` when left out. When
+`PUBLIC_WS_URL` is optional, it follows `PUBLIC_API_URL` when left out. `PUBLIC_MIN_AGE` is not required unless you live in a country where the
+When
 the server `PORT` is not 9070, set the matching port:
 
 ```sh
 PUBLIC_API_PORT=9080
 ```
-
-`PUBLIC_HCAPTCHA_SITEKEY` is optional. When it is omitted, hCaptcha is disabled in the login form.
+We assume the [backend](https://github.com/hymenia/server) you are using has Altcha configured correctly.
 
 ## Commands
 

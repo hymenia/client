@@ -98,13 +98,13 @@
   transition: background var(--speed);
   border-radius: var(--radius);
   box-sizing: border-box;
+  position: fixed;
 }
 .close-btn:hover {
   background: var(--panel-soft);
 }
 .settings-inner-body {
   padding: 32px;
-  padding-top: 50px;
   flex: 1;
   max-width: 600px;
 }
