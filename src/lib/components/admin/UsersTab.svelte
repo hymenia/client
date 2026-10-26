@@ -6,7 +6,7 @@
   import { onMount } from 'svelte';
 
   const PAGE_SIZE = 50;
-  const ROLES = ['admin', 'verified', 'developer'];
+  const ROLES = ['admin', 'verified', 'developer', 'glee'];
 
   let users = $state([]);
   let total = $state(0);
