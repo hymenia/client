@@ -116,7 +116,7 @@
   }
 
   async function deleteUser(user) {
-    if (busyUserId || user.is_instance_owner) return;
+    if (busyUserId) return;
     const self = user.id === $auth.user?.id;
     const label = user.display_name || user.username;
     const kind = user.is_bot ? 'app' : 'user';
@@ -255,10 +255,8 @@
                 type="button"
                 class="theme-btn delete-btn"
                 onclick={() => deleteUser(user)}
-                disabled={busyUserId === user.id || user.is_instance_owner}
-                title={user.is_instance_owner
-                  ? 'The first account created on the instance cannot be deleted'
-                  : (user.id === $auth.user?.id ? 'This will delete your account and sign you out' : null)}
+                disabled={busyUserId === user.id}
+                title={user.id === $auth.user?.id ? 'This will delete your account and sign you out' : null}
               >
                 {busyUserId === user.id ? 'Working...' : (user.is_bot ? 'Delete app' : (user.id === $auth.user?.id ? 'Delete my account' : 'Delete user'))}
               </button>
