@@ -121,4 +121,20 @@
   .email-settings .email-form button {
     width: 100%;
   }
+  .admin-users-heading {
+    flex-direction: column;
+  }
+  .admin-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .admin-user-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+    align-items: flex-start;
+  }
+  .admin-user-stats {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+  }
 }

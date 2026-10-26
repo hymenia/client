@@ -100,10 +100,13 @@
 .hcaptcha-wrap {
   display: flex;
   justify-content: center;
-  transform: scale(0.85);
-  transform-origin: center top;
-  margin-top: 4px;
-  margin-bottom: -12px;
+  transform: none;
+  margin: 4px 0 0;
+}
+
+altcha-widget {
+  display: block;
+  width: 100%;
 }
 
 .auth-policy {

@@ -88,6 +88,10 @@
 
   async function handleDeleteAccount() {
     deleteErr = '';
+    if ($auth.user?.is_instance_owner) {
+      deleteErr = 'The first account can\'t be deleted';
+      return;
+    }
     if (!deletePassword) {
       deleteErr = 'Password confirmation is required';
       return;
@@ -198,16 +202,20 @@
 
   <div class="setting-block danger-block">
     <h3>Delete account</h3>
-    <p class="warn-text">Permanently deletes your account, messages, and associated passkeys. This cannot be undone.</p>
-    <form onsubmit={(e) => { e.preventDefault(); handleDeleteAccount(); }}>
-      <div class="form-group">
-        <label for="del-pass">Confirm with your password</label>
-        <input id="del-pass" type="password" bind:value={deletePassword} placeholder="Enter your password" />
-      </div>
-      {#if deleteErr}
-        <p class="err">{deleteErr}</p>
-      {/if}
-      <button type="submit" class="theme-btn delete-btn"><Trash2 size={14} /> Delete account</button>
-    </form>
+    {#if $auth.user?.is_instance_owner}
+      <p class="warn-text">The first account can't be deleted.</p>
+    {:else}
+      <p class="warn-text">Permanently deletes your account, messages, and associated passkeys. This cannot be undone.</p>
+      <form onsubmit={(e) => { e.preventDefault(); handleDeleteAccount(); }}>
+        <div class="form-group">
+          <label for="del-pass">Confirm with your password</label>
+          <input id="del-pass" type="password" bind:value={deletePassword} placeholder="Enter your password" />
+        </div>
+        {#if deleteErr}
+          <p class="err">{deleteErr}</p>
+        {/if}
+        <button type="submit" class="theme-btn delete-btn"><Trash2 size={14} /> Delete account</button>
+      </form>
+    {/if}
   </div>
 </div>

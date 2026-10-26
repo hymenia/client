@@ -21,13 +21,16 @@
   import AdminPanel from '$lib/components/AdminPanel.svelte';
   import Chatbar from '$lib/components/Chatbar.svelte';
   import ChatList from '$lib/components/ChatList.svelte';
+  import DmList from '$lib/components/DmList.svelte';
   import HomePage from '$lib/components/HomePage.svelte';
   import InviteDialog from '$lib/components/InviteDialog.svelte';
+  import MemberList from '$lib/components/MemberList.svelte';
   import ProfileDialog from '$lib/components/ProfileDialog.svelte';
   import SettingsModal from '$lib/components/SettingsModal.svelte';
   import SpaceList from '$lib/components/SpaceList.svelte';
   import VoiceBar from '$lib/components/VoiceBar.svelte';
   import { API_HOST } from '$lib/config.js';
+  import { fetchDms, openDm } from '$lib/dms.js';
   import { mapServerMessage } from '$lib/messageShape.js';
   import { fetchProfile } from '$lib/profile.js';
   import {
@@ -52,7 +55,10 @@
   let box = $state(null);
   // svelte-ignore non_reactive_update
   let voiceBar;
-
+  let members = $state([]);
+  let membersLoading = $state(false);
+  let membersErr = $state('');
+  let showMembers = $state(true);
   let selectedSpaceId = $state(null);
   let selectedChatId = $state(null);
   let hasOlder = $state(false);
@@ -93,6 +99,10 @@
   let joinErr = $state('');
   let joinSuccess = $state('');
   let chatError = $state('');
+
+  let dmMode = $state(false);
+  let dms = $state([]);
+  let dmErr = $state('');
 
   function handleSpaceClick(spaceId) {
     selectSpace(spaceId);
@@ -202,6 +212,7 @@
     chatSelectionRequest += 1;
     olderMessagesRequest += 1;
     leaveTextChatRooms($chatsStore);
+    dmMode = false;
     selectedSpaceId = spaceId;
     selectedChatId = null;
     hasOlder = false;
@@ -247,7 +258,7 @@
   }
 
   async function selectChat(chat) {
-    if (chat.type !== 'text') return;
+    if (chat.type !== 'text' && chat.type !== 'dm') return;
 
     const requestId = ++chatSelectionRequest;
     olderMessagesRequest += 1;
@@ -357,6 +368,42 @@
     }
   }
 
+  // dm functions
+
+  async function loadDms() {
+    if (!$auth.token) return;
+    try {
+      dms = await fetchDms($auth.token);
+    } catch (e) {
+      dmErr = e.message;
+    }
+  }
+
+  function openDmMode() {
+    dmMode = true;
+    dmErr = '';
+    selectedSpaceId = null;
+    mobileView = 'chats';
+    loadDms();
+  }
+
+  async function startDm(username) {
+    dmErr = '';
+    try {
+      const data = await openDm($auth.token, username);
+      await loadDms();
+      selectDm({ id: data.id, type: 'dm' });
+    } catch (e) {
+      dmErr = e.message;
+    }
+  }
+
+  function selectDm(dm) {
+    selectedSpaceId = null;
+    mobileView = 'chat';
+    selectChat({ id: dm.id, type: 'dm' });
+  }
+
   async function handleAttach(file) {
     if (!selectedChatId || !file) return;
     if ($auth.user && $auth.user.email_verified === false) {
@@ -451,8 +498,27 @@
     msgs.set([]);
     selectedSpaceId = null;
     selectedChatId = null;
+    dmMode = false;
+    dms = [];
     goto('/login');
   }
+
+  $effect(() => {
+  const id = selectedSpaceId;
+  if (!id || !$auth.token) { members = []; return; }
+  membersLoading = true;
+  membersErr = '';
+  fetch(`${API_HOST}/api/spaces/${id}/members`, {
+    headers: { Authorization: `Bearer ${$auth.token}` }
+  })
+    .then(async (r) => {
+      const data = await r.json().catch(() => []);
+      if (!r.ok) throw new Error(data.error || 'Could not load members');
+      members = data;
+    })
+    .catch((e) => { membersErr = e.message; members = []; })
+    .finally(() => { membersLoading = false; });
+  });
 </script>
 
 <svelte:window onpointermove={onPointerMove} onpointerup={onPointerUp} />
@@ -466,8 +532,10 @@
     {joinErr}
     {joinSuccess}
     onSpaceClick={handleSpaceClick}
+    onDmClick={openDmMode}
     onCreateSpace={handleCreateSpace}
     onJoin={joinViaCode}
+    dmActive={dmMode}
     bind:newSpaceName
     bind:newSpaceVisibility
     bind:joinCode
@@ -476,20 +544,31 @@
 
   <div class="col-divider" role="separator" onpointerdown={startResize('spaces')}></div>
 
-  <ChatList
-    width={columns.chatsWidth}
-    {selectedChatId}
-    {voiceChatId}
-    {unreadCounts}
-    {canManageSpace}
-    spaceSelected={!!selectedSpaceId}
-    {createErr}
-    onChatClick={handleChatClick}
-    onCreateChat={handleCreateChat}
-    onBack={backToSpaces}
-    bind:newChatName
-    bind:newChatType
-  />
+  {#if dmMode}
+    <DmList
+      width={columns.chatsWidth}
+      {dms}
+      activeId={selectedChatId}
+      {dmErr}
+      onOpen={selectDm}
+      onStart={startDm}
+    />
+  {:else}
+    <ChatList
+      width={columns.chatsWidth}
+      {selectedChatId}
+      {voiceChatId}
+      {unreadCounts}
+      {canManageSpace}
+      spaceSelected={!!selectedSpaceId}
+      {createErr}
+      onChatClick={handleChatClick}
+      onCreateChat={handleCreateChat}
+      onBack={backToSpaces}
+      bind:newChatName
+      bind:newChatType
+    />
+  {/if}
 
   <div class="col-divider" role="separator" onpointerdown={startResize('chats')}></div>
 
@@ -540,6 +619,17 @@
       {chatError}
     />
   </main>
+
+  {#if selectedSpaceId && !dmMode && showMembers}
+  <MemberList
+    width={190}
+    {members}
+    loading={membersLoading}
+    error={membersErr}
+    onOpenProfile={(member) => openProfile(member.username)}
+    onBack={() => (showMembers = false)}
+  />
+{/if}
 </div>
 
 <InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
