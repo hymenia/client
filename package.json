@@ -31,6 +31,6 @@
     "altcha": "^3.5.0",
     "emoji-picker-element": "^1.29.1",
     "emoji-picker-element-data": "^1.8.0",
-    "livekit-client": "^2.15.0"
+    "livekit-client": "^2.23.0"
   }
 }
