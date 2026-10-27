@@ -450,6 +450,12 @@
           }
           return;
         }
+        if (data.event === 'reaction_update') {
+          if (String(data.chat_id) === String(selectedChatId)) {
+            applyReactionUpdate(data.message_id, data.emoji, data.user_id, data.added, data.reactions);
+          }
+          return;
+        }
         if (data.chat_id && String(data.chat_id) !== String(selectedChatId)) {
           incrementUnread(data.chat_id);
           return;
@@ -496,6 +502,48 @@
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Could not edit message');
     applyMessageEdit(message.id, data.content, data.edited_at);
+  }
+
+  function applyReactionUpdate(messageId, emoji, actorId, added, reactions) {
+    const myId = String($auth.user?.id);
+    msgs.update((items) =>
+      items.map((m) => {
+        if (String(m.id) !== String(messageId)) return m;
+        const previousMine = new Map((m.reactions ?? []).map((r) => [r.emoji, r.me]));
+        return {
+          ...m,
+          reactions: (reactions ?? []).map((r) => ({
+            emoji: r.emoji,
+            count: r.count,
+            me: r.emoji === emoji && String(actorId) === myId
+              ? !!added
+              : (previousMine.get(r.emoji) ?? false)
+          }))
+        };
+      })
+    );
+  }
+
+  async function toggleReaction(message, emoji) {
+    const current = $msgs.find((m) => String(m.id) === String(message.id)) ?? message;
+    const mine = (current.reactions ?? []).some((r) => r.emoji === emoji && r.me);
+    try {
+      const res = await fetch(
+        `${API_HOST}/api/messages/${message.id}/reactions/${encodeURIComponent(emoji)}`,
+        {
+          method: mine ? 'DELETE' : 'PUT',
+          headers: { Authorization: `Bearer ${$auth.token}` }
+        }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        chatError = data.error || 'Could not update reaction';
+        return;
+      }
+      applyReactionUpdate(message.id, emoji, $auth.user?.id, data.added, data.reactions);
+    } catch (e) {
+      chatError = 'Could not reach server';
+    }
   }
 
   function reportChatMessage(message) {
@@ -627,8 +675,8 @@
         <div class="bar-user">
           {#if $auth.user?.email_verified === false}
             <span class="inline-notice">
-              Your email isn't verified, check your inbox
-              <button type="button" class="inline-notice-link" onclick={openSettings}>Resend email</button>
+              Your email isn't verified
+              <button type="button" class="inline-notice-link" onclick={openSettings}>Verify now</button>
             </span>
           {/if}
         </div>
@@ -664,6 +712,7 @@
         onDelete={deleteChatMessage}
         onEdit={editChatMessage}
         onReport={reportChatMessage}
+        onReact={toggleReaction}
         emailVerified={$auth.user?.email_verified ?? true}
         {chatError}
       />

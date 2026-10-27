@@ -27,6 +27,7 @@
     onDelete = undefined,
     onEdit = undefined,
     onReport = undefined,
+    onReact = undefined,
     emailVerified = true,
     chatError = ''
   } = $props();
@@ -120,6 +121,7 @@
     {onDelete}
     {onEdit}
     {onReport}
+    {onReact}
     onReply={(message) => (replyingTo = message)}
   />
 

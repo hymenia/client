@@ -1,4 +1,5 @@
 <script>
+  import EmojiPicker from '$lib/components/EmojiPicker.svelte';
   import { API_HOST } from '$lib/config.js';
   import { copyText } from '$lib/contextMenu.svelte.js';
   import { renderMarkdown } from '$lib/md.js';
@@ -11,6 +12,8 @@
   import Paperclip from '@lucide/svelte/icons/paperclip';
   import Pencil from '@lucide/svelte/icons/pencil';
   import Reply from '@lucide/svelte/icons/reply';
+  import SmilePlus from '@lucide/svelte/icons/smile-plus';
+  import twemoji from '@twemoji/api';
   import { onDestroy } from 'svelte';
 
   let {
@@ -25,6 +28,7 @@
     onReply = undefined,
     onReport = undefined,
     onEdit = undefined,
+    onReact = undefined,
     currentUsername = null,
     canDeleteAny = false,
     onDelete = undefined
@@ -38,6 +42,7 @@
   let contextMenu = $state(null);
   let editing = $state(null);
   let tappedId = $state(null);
+  let picker = $state(null);
   let longPressTimer = null;
   let longPressTriggered = false;
   let longPressStart = null;
@@ -73,9 +78,9 @@
     if (!message.id) return;
     event.preventDefault();
     const canDelete = message.sender === currentUsername || canDeleteAny;
-    const canReport = !!onReport && message.sender !== currentUsername;
+    const canReport = !!onReport && message.sender !== currentUsername && !message.senderIsApp;
     const canEdit = !!onEdit && message.sender === currentUsername && !message.senderIsApp;
-    const items = 3 + (canDelete ? 1 : 0) + (canReport ? 1 : 0) + (canEdit ? 1 : 0); // reply + 2 copy items
+    const items = 3 + (canDelete ? 1 : 0) + (canReport ? 1 : 0) + (canEdit ? 1 : 0) + (onReact ? 1 : 0); // reply + 2 copy items
     const height = 8 + 40 * items;
     contextMenu = {
       message,
@@ -136,6 +141,41 @@
     if (event.key !== 'ContextMenu' && !(event.shiftKey && event.key === 'F10')) return;
     const rect = event.currentTarget.getBoundingClientRect();
     showContextMenu({ preventDefault() {}, clientX: rect.left, clientY: rect.bottom }, message);
+  }
+
+  const PICKER_WIDTH = 340;
+  const PICKER_HEIGHT = 380;
+
+  function placePicker(message, x, y) {
+    picker = {
+      message,
+      x: Math.max(8, Math.min(x, window.innerWidth - PICKER_WIDTH - 8)),
+      y: Math.max(8, Math.min(y, window.innerHeight - PICKER_HEIGHT - 8))
+    };
+  }
+
+  function reactFromMenu() {
+    const menu = contextMenu;
+    contextMenu = null;
+    if (menu) placePicker(menu.message, menu.x, menu.y);
+  }
+
+  function openPickerFromPill(event, message) {
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    placePicker(message, rect.left, rect.bottom + 4);
+  }
+
+  function pickReaction(emoji) {
+    const message = picker?.message;
+    picker = null;
+    if (message && emoji) onReact?.(message, emoji);
+  }
+
+  // reactions come from the server (validated but we escape anyway)
+  function emojiHtml(emoji) {
+    const safe = String(emoji).replace(/[&<>"']/g, '');
+    return twemoji.parse(safe, { folder: 'svg', ext: '.svg', className: 'emoji' });
   }
 
   function replyFromMenu() {
@@ -220,6 +260,7 @@
     if (event?.key && event.key !== 'Escape') return;
     if (event?.type === 'click' && !event.target?.closest?.('.msg')) tappedId = null;
     contextMenu = null;
+    picker = null;
   }
 
   function copyUserId() {
@@ -372,6 +413,33 @@
               {/each}
             </div>
           {/if}
+          {#if m.reactions?.length}
+            <div class="msg-reactions">
+              {#each m.reactions as r (r.emoji)}
+                <button
+                  type="button"
+                  class="reaction"
+                  class:reaction-mine={r.me}
+                  aria-pressed={r.me}
+                  aria-label={`${r.emoji} ${r.count}`}
+                  onclick={() => onReact?.(m, r.emoji)}
+                >
+                  <span class="reaction-emoji">{@html emojiHtml(r.emoji)}</span>
+                  <span class="reaction-count">{r.count}</span>
+                </button>
+              {/each}
+              {#if onReact}
+                <button
+                  type="button"
+                  class="reaction reaction-add"
+                  aria-label="Add reaction"
+                  onclick={(event) => openPickerFromPill(event, m)}
+                >
+                  <SmilePlus size={14} />
+                </button>
+              {/if}
+            </div>
+          {/if}
         </div>
         {#if m.id}
           <button
@@ -398,6 +466,12 @@
       onclick={(event) => event.stopPropagation()}
       oncontextmenu={(event) => event.preventDefault()}
     >
+      {#if onReact}
+        <button type="button" role="menuitem" onclick={reactFromMenu}>
+          <SmilePlus size={14} />
+          <span>Add reaction</span>
+        </button>
+      {/if}
       <button type="button" role="menuitem" onclick={replyFromMenu}>
         <Reply size={14} />
         <span>Reply</span>
@@ -428,6 +502,18 @@
         </button>
       {/if}
       {#if contextMenu.error}<p role="alert">{contextMenu.error}</p>{/if}
+    </div>
+  {/if}
+  {#if picker}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      class="reaction-picker"
+      style:--picker-x={`${picker.x}px`}
+      style:--picker-y={`${picker.y}px`}
+      onclick={(event) => event.stopPropagation()}
+    >
+      <EmojiPicker onPick={pickReaction} onClose={() => (picker = null)} />
     </div>
   {/if}
 </div>

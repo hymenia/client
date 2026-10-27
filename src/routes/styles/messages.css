@@ -578,3 +578,56 @@ img.emoji {
     display: inline-flex;
   }
 }
+
+.msg-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+ 
+.reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-round);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: var(--font-size-small);
+  cursor: pointer;
+}
+ 
+.reaction:hover {
+  background: var(--hover);
+}
+ 
+.reaction-mine {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+ 
+.reaction-emoji {
+  display: inline-flex;
+  align-items: center;
+}
+ 
+.reaction-count {
+  font-variant-numeric: tabular-nums;
+}
+ 
+.reaction-add {
+  padding: 0 6px;
+  color: var(--text-muted);
+}
+ 
+.reaction-picker {
+  position: fixed;
+  left: var(--picker-x);
+  top: var(--picker-y);
+  z-index: 10001;
+}
+ 

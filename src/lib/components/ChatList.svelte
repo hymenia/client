@@ -1,10 +1,10 @@
 <script>
-  import Hash from '@lucide/svelte/icons/hash';
-import Mic from '@lucide/svelte/icons/mic';
-import Plus from '@lucide/svelte/icons/plus';
-import ArrowLeft from '@lucide/svelte/icons/arrow-left';
-import X from '@lucide/svelte/icons/x';
   import { chats as chatsStore } from '$lib/stores.js';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import Hash from '@lucide/svelte/icons/hash';
+  import Mic from '@lucide/svelte/icons/mic';
+  import Plus from '@lucide/svelte/icons/plus';
+  import X from '@lucide/svelte/icons/x';
 
   let {
     width = 190,
@@ -29,7 +29,7 @@ import X from '@lucide/svelte/icons/x';
     <ArrowLeft size={18} />
   </button>
   {#if canManageSpace}
-    <button type="button" class="sidebar-new-btn" disabled={!spaceSelected} onclick={() => (showNewChat = true)}>
+    <button type="button" class="chat-item chat-item-new" disabled={!spaceSelected} onclick={() => (showNewChat = true)}>
       <Plus size={16} />
       <span>New chat</span>
     </button>

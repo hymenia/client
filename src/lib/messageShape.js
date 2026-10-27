@@ -13,6 +13,7 @@ export function mapServerMessage(row) {
     replyToId: row.reply_to_id || null,
     replyToSender: row.reply_to_sender || null,
     replyToContent: row.reply_to_content || null,
-    attachments: row.attachments || []
+    attachments: row.attachments || [],
+    reactions: row.reactions || [] 
   };
 }
