@@ -293,3 +293,23 @@
 .server-switcher-hint {
   margin: 12px 0 0;
 }
+
+  .report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .report-form textarea {
+    resize: vertical;
+    font: inherit;
+  }
+  .report-label {
+    max-height: 4.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.8;
+  }
+
+  .monospaced {
+    font-family: 'Consolas', 'Courier New', ui-monospace, monospace;
+  }

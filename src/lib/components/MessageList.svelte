@@ -6,7 +6,10 @@
   import ChevronDown from '@lucide/svelte/icons/chevron-down';
   import ChevronUp from '@lucide/svelte/icons/chevron-up';
   import Copy from '@lucide/svelte/icons/copy';
+  import Ellipsis from '@lucide/svelte/icons/ellipsis';
+  import Flag from '@lucide/svelte/icons/flag';
   import Paperclip from '@lucide/svelte/icons/paperclip';
+  import Pencil from '@lucide/svelte/icons/pencil';
   import Reply from '@lucide/svelte/icons/reply';
   import { onDestroy } from 'svelte';
 
@@ -20,15 +23,21 @@
     onLoadOlder = undefined,
     onProfileClick = undefined,
     onReply = undefined,
+    onReport = undefined,
+    onEdit = undefined,
     currentUsername = null,
     canDeleteAny = false,
     onDelete = undefined
   } = $props();
 
+  const MENU_WIDTH = 176;
+
   let previewUrls = $state({});
   const loadingPreviewIds = new Set();
   let scrolledUp = $state(false);
   let contextMenu = $state(null);
+  let editing = $state(null);
+  let tappedId = $state(null);
   let longPressTimer = null;
   let longPressTriggered = false;
   let longPressStart = null;
@@ -51,6 +60,7 @@
   $effect(() => {
     chatId;
     scrolledUp = false;
+    tappedId = null;
   });
 
   function avatarSrc(username, overrideUrl = null) {
@@ -63,14 +73,32 @@
     if (!message.id) return;
     event.preventDefault();
     const canDelete = message.sender === currentUsername || canDeleteAny;
-       const height = 8 + 40 * (canDelete ? 3 : 2);
+    const canReport = !!onReport && message.sender !== currentUsername;
+    const canEdit = !!onEdit && message.sender === currentUsername && !message.senderIsApp;
+    const items = 3 + (canDelete ? 1 : 0) + (canReport ? 1 : 0) + (canEdit ? 1 : 0); // reply + 2 copy items
+    const height = 8 + 40 * items;
     contextMenu = {
       message,
       canDelete,
-      x: Math.max(8, Math.min(event.clientX, window.innerWidth - 176)),
+      canReport,
+      canEdit,
+      x: Math.max(8, Math.min(event.clientX, window.innerWidth - MENU_WIDTH)),
       y: Math.max(8, Math.min(event.clientY, window.innerHeight - height - 8)),
       error: ''
     };
+  }
+
+  function openMenuFromButton(event, message) {
+    event.stopPropagation();
+    if (contextMenu?.message === message) {
+      contextMenu = null;
+      return;
+    }
+    const rect = event.currentTarget.getBoundingClientRect();
+    showContextMenu(
+      { preventDefault() {}, clientX: rect.right - MENU_WIDTH, clientY: rect.bottom },
+      message
+    );
   }
 
   function startLongPress(event, message) {
@@ -116,6 +144,62 @@
     if (message) onReply?.(message);
   }
 
+  function reportFromMenu() {
+    const message = contextMenu?.message;
+    contextMenu = null;
+    if (message) onReport?.(message);
+  }
+
+  function startEdit() {
+    const message = contextMenu?.message;
+    contextMenu = null;
+    if (!message) return;
+    editing = { id: message.id, text: message.content ?? '', busy: false, error: '' };
+  }
+
+  function cancelEdit() {
+    editing = null;
+  }
+
+  async function saveEdit() {
+    if (!editing || editing.busy) return;
+    const message = msgs.find((m) => m.id === editing.id);
+    const text = editing.text.trim();
+    if (!message) {
+      editing = null;
+      return;
+    }
+    if (!text) {
+      editing.error = 'Message cannot be empty';
+      return;
+    }
+    if (text === (message.content ?? '').trim()) {
+      editing = null; // nothing changed
+      return;
+    }
+    editing.busy = true;
+    editing.error = '';
+    try {
+      await onEdit?.(message, text);
+      if (editing?.id === message.id) editing = null;
+    } catch (error) {
+      if (editing) {
+        editing.busy = false;
+        editing.error = error.message || 'Could not edit message';
+      }
+    }
+  }
+
+  function editKeydown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      saveEdit();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      cancelEdit();
+    }
+  }
+
   async function deleteFromMenu() {
     if (!contextMenu?.message) return;
     try {
@@ -126,8 +210,15 @@
     }
   }
 
+  function toggleTapped(event, message) {
+    if (!message.id || !window.matchMedia('(hover: none)').matches) return;
+    if (event.target.closest?.('button, a, textarea, input, video, audio')) return;
+    tappedId = tappedId === message.id ? null : message.id;
+  }
+
   function closeContextMenu(event) {
     if (event?.key && event.key !== 'Escape') return;
+    if (event?.type === 'click' && !event.target?.closest?.('.msg')) tappedId = null;
     contextMenu = null;
   }
 
@@ -195,7 +286,7 @@
 
 <svelte:window onclick={closeContextMenu} onkeydown={closeContextMenu} onresize={closeContextMenu} onscroll={closeContextMenu} />
 
-<div class="message-list">
+<div class="message-list" class:menu-open={!!contextMenu}>
   {#if scrolledUp}
     <div class="msg-nav-bar">
       {#if hasOlder}
@@ -215,7 +306,7 @@
       {@const grouped = isGroupedMessage(msgs[i - 1], m)}
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
       <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <div class="msg" class:msg-grouped={grouped} role="group" tabindex="0" oncontextmenu={(event) => showContextMenu(event, m)} onkeydown={(event) => showKeyboardMenu(event, m)} onpointerdown={(event) => startLongPress(event, m)} onpointermove={moveLongPress} onpointerup={cancelLongPress} onpointercancel={cancelLongPress} onpointerleave={cancelLongPress} onclickcapture={handleMessageClickCapture}>
+      <div class="msg" class:msg-grouped={grouped} class:msg-tapped={tappedId === m.id} role="group" tabindex="0" onclick={(event) => toggleTapped(event, m)} oncontextmenu={(event) => showContextMenu(event, m)} onkeydown={(event) => showKeyboardMenu(event, m)} onpointerdown={(event) => startLongPress(event, m)} onpointermove={moveLongPress} onpointerup={cancelLongPress} onpointercancel={cancelLongPress} onpointerleave={cancelLongPress} onclickcapture={handleMessageClickCapture}>
         {#if grouped}
           <div class="msg-avatar-spacer" aria-hidden="true"></div>
         {:else}
@@ -236,7 +327,29 @@
               {#if m.senderIsApp}<span class="msg-app-badge">APP</span>{/if}
             </div>
           {/if}
-          <div class="msg-content">{@html renderMarkdown(m.content)}</div>
+          {#if editing?.id === m.id}
+            <div class="msg-edit">
+              <!-- svelte-ignore a11y_autofocus -->
+              <textarea
+                class="msg-edit-input"
+                bind:value={editing.text}
+                rows="2"
+                autofocus
+                onkeydown={editKeydown}
+                onpointerdown={(event) => event.stopPropagation()}
+              ></textarea>
+              <div class="msg-edit-actions">
+                <span class="msg-edit-hint">Enter to save | Esc to cancel</span>
+                <button type="button" class="theme-btn" onclick={cancelEdit} disabled={editing.busy}>Cancel</button>
+                <button type="button" class="theme-btn" onclick={saveEdit} disabled={editing.busy}>
+                  {editing.busy ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+              {#if editing.error}<p class="err" role="alert">{editing.error}</p>{/if}
+            </div>
+          {:else}
+            <div class="msg-content">{@html renderMarkdown(m.content)}{#if m.editedAt}<span class="msg-edited"> (edited)</span>{/if}</div>
+          {/if}
           {#if m.attachments?.length}
             <div class="msg-attachments">
               {#each m.attachments as attachment}
@@ -260,6 +373,17 @@
             </div>
           {/if}
         </div>
+        {#if m.id}
+          <button
+            type="button"
+            class="msg-more"
+            aria-label="Message actions"
+            aria-haspopup="menu"
+            onclick={(event) => openMenuFromButton(event, m)}
+          >
+            <Ellipsis size={16} />
+          </button>
+        {/if}
       </div>
     {/each}
   </div>
@@ -278,9 +402,10 @@
         <Reply size={14} />
         <span>Reply</span>
       </button>
-      {#if contextMenu.canDelete}
-        <button type="button" role="menuitem" class="message-context-delete" onclick={deleteFromMenu}>
-          <span>Delete message</span>
+      {#if contextMenu.canEdit}
+        <button type="button" role="menuitem" onclick={startEdit}>
+          <Pencil size={14} />
+          <span>Edit message</span>
         </button>
       {/if}
       <button type="button" role="menuitem" onclick={copyUserId}>
@@ -291,6 +416,17 @@
         <Copy size={14} />
         <span>Copy text</span>
       </button>
+      {#if contextMenu.canReport}
+        <button type="button" role="menuitem" class="message-context-delete" onclick={reportFromMenu}>
+          <Flag size={14} />
+          <span>Report message</span>
+        </button>
+      {/if}
+      {#if contextMenu.canDelete}
+        <button type="button" role="menuitem" class="message-context-delete" onclick={deleteFromMenu}>
+          <span>Delete message</span>
+        </button>
+      {/if}
       {#if contextMenu.error}<p role="alert">{contextMenu.error}</p>{/if}
     </div>
   {/if}

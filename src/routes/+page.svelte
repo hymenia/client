@@ -26,6 +26,7 @@
   import InviteDialog from '$lib/components/InviteDialog.svelte';
   import MemberList from '$lib/components/MemberList.svelte';
   import ProfileDialog from '$lib/components/ProfileDialog.svelte';
+  import ReportDialog from '$lib/components/ReportDialog.svelte';
   import SettingsModal from '$lib/components/SettingsModal.svelte';
   import SpaceList from '$lib/components/SpaceList.svelte';
   import VoiceBar from '$lib/components/VoiceBar.svelte';
@@ -65,6 +66,7 @@
   let loadingOlder = $state(false);
   let spaceSelectionRequest = 0;
   let chatSelectionRequest = 0;
+  let reporting = $state(null);
   let olderMessagesRequest = 0;
   let unreadCounts = $state({});
   let newSpaceName = $state('');
@@ -442,6 +444,12 @@
           if (String(data.chat_id) === String(selectedChatId)) markMessageDeleted(data.id);
           return;
         }
+        if (data.event === 'message_edited') {
+          if (String(data.chat_id) === String(selectedChatId)) {
+            applyMessageEdit(data.id, data.content, data.edited_at);
+          }
+          return;
+        }
         if (data.chat_id && String(data.chat_id) !== String(selectedChatId)) {
           incrementUnread(data.chat_id);
           return;
@@ -466,6 +474,32 @@
   async function deleteChatMessage(message) {
     await deleteMessage($auth.token, message.id);
     markMessageDeleted(message.id);
+  }
+
+  function applyMessageEdit(messageId, content, editedAt) {
+    msgs.update((items) =>
+      items.map((m) =>
+        String(m.id) === String(messageId) ? { ...m, content, editedAt } : m
+      )
+    );
+  }
+
+  async function editChatMessage(message, content) {
+    const res = await fetch(`${API_HOST}/api/messages/${message.id}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${$auth.token}`
+      },
+      body: JSON.stringify({ content })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Could not edit message');
+    applyMessageEdit(message.id, data.content, data.edited_at);
+  }
+
+  function reportChatMessage(message) {
+    reporting = { type: 'message', id: message.id, label: message.content };
   }
 
   function send() {
@@ -503,151 +537,174 @@
     goto('/login');
   }
 
+  // load the member list whenever the selected space changes
   $effect(() => {
-  const id = selectedSpaceId;
-  if (!id || !$auth.token) { members = []; return; }
-  membersLoading = true;
-  membersErr = '';
-  fetch(`${API_HOST}/api/spaces/${id}/members`, {
-    headers: { Authorization: `Bearer ${$auth.token}` }
-  })
-    .then(async (r) => {
-      const data = await r.json().catch(() => []);
-      if (!r.ok) throw new Error(data.error || 'Could not load members');
-      members = data;
+    const id = selectedSpaceId;
+    if (!id || !$auth.token) {
+      members = [];
+      return;
+    }
+    membersLoading = true;
+    membersErr = '';
+    fetch(`${API_HOST}/api/spaces/${id}/members`, {
+      headers: { Authorization: `Bearer ${$auth.token}` }
     })
-    .catch((e) => { membersErr = e.message; members = []; })
-    .finally(() => { membersLoading = false; });
+      .then(async (r) => {
+        const data = await r.json().catch(() => []);
+        if (!r.ok) throw new Error(data.error || 'Could not load members');
+        members = data;
+      })
+      .catch((e) => {
+        membersErr = e.message;
+        members = [];
+      })
+      .finally(() => {
+        membersLoading = false;
+      });
   });
 </script>
 
 <svelte:window onpointermove={onPointerMove} onpointerup={onPointerUp} />
 
 {#if $auth.token}
-<div class="app-layout" class:resizing={columns.resizing} data-mobile-view={mobileView}>
-  <SpaceList
-    width={columns.spacesWidth}
-    {selectedSpaceId}
-    {createErr}
-    {joinErr}
-    {joinSuccess}
-    onSpaceClick={handleSpaceClick}
-    onDmClick={openDmMode}
-    onCreateSpace={handleCreateSpace}
-    onJoin={joinViaCode}
-    dmActive={dmMode}
-    bind:newSpaceName
-    bind:newSpaceVisibility
-    bind:joinCode
-    emailVerified={$auth.user?.email_verified ?? true}
-  />
-
-  <div class="col-divider" role="separator" onpointerdown={startResize('spaces')}></div>
-
-  {#if dmMode}
-    <DmList
-      width={columns.chatsWidth}
-      {dms}
-      activeId={selectedChatId}
-      {dmErr}
-      onOpen={selectDm}
-      onStart={startDm}
-    />
-  {:else}
-    <ChatList
-      width={columns.chatsWidth}
-      {selectedChatId}
-      {voiceChatId}
-      {unreadCounts}
-      {canManageSpace}
-      spaceSelected={!!selectedSpaceId}
+  <div class="app-layout" class:resizing={columns.resizing} data-mobile-view={mobileView}>
+    <SpaceList
+      width={columns.spacesWidth}
+      {selectedSpaceId}
       {createErr}
-      onChatClick={handleChatClick}
-      onCreateChat={handleCreateChat}
-      onBack={backToSpaces}
-      bind:newChatName
-      bind:newChatType
+      {joinErr}
+      {joinSuccess}
+      onSpaceClick={handleSpaceClick}
+      onDmClick={openDmMode}
+      onCreateSpace={handleCreateSpace}
+      onJoin={joinViaCode}
+      onSpaceJoined={async (space) => {
+        await loadSpaces();
+        handleSpaceClick(space.id);
+      }}
+      dmActive={dmMode}
+      bind:newSpaceName
+      bind:newSpaceVisibility
+      bind:joinCode
+      emailVerified={$auth.user?.email_verified ?? true}
+    />
+
+    <div class="col-divider" role="separator" onpointerdown={startResize('spaces')}></div>
+
+    {#if dmMode}
+      <DmList
+        width={columns.chatsWidth}
+        {dms}
+        activeId={selectedChatId}
+        {dmErr}
+        onOpen={selectDm}
+        onStart={startDm}
+      />
+    {:else}
+      <ChatList
+        width={columns.chatsWidth}
+        {selectedChatId}
+        {voiceChatId}
+        {unreadCounts}
+        {canManageSpace}
+        spaceSelected={!!selectedSpaceId}
+        {createErr}
+        onChatClick={handleChatClick}
+        onCreateChat={handleCreateChat}
+        onBack={backToSpaces}
+        bind:newChatName
+        bind:newChatType
+      />
+    {/if}
+
+    <div class="col-divider" role="separator" onpointerdown={startResize('chats')}></div>
+
+    <main class="col-chat">
+      <div class="bar">
+        <button type="button" class="mobile-back-btn" onclick={backToChats}>
+          <ArrowLeft size={18} />
+        </button>
+        <div class="bar-user">
+          {#if $auth.user?.email_verified === false}
+            <span class="inline-notice">
+              Your email isn't verified, check your inbox
+              <button type="button" class="inline-notice-link" onclick={openSettings}>Resend email</button>
+            </span>
+          {/if}
+        </div>
+        <div class="bar-actions">
+          {#if canManageSpace}
+            <button type="button" class="theme-btn" onclick={() => showInvite = true}><UserPlus size={16} /> Invite</button>
+          {/if}
+          {#if instanceAdmin}
+            <button type="button" class="theme-btn" onclick={() => showAdmin = true}><AppWindow size={16} /> Admin</button>
+          {/if}
+          <button type="button" class="theme-btn" onclick={openSettings}><SettingsIcon size={16} /> Settings</button>
+        </div>
+      </div>
+
+      <VoiceBar bind:this={voiceBar} bind:voiceChatId />
+
+      <Chatbar
+        msgs={$msgs}
+        bind:txt
+        bind:replyingTo
+        bind:box
+        chatId={selectedChatId}
+        {hasOlder}
+        {loadingOlder}
+        {avatarVersion}
+        {enterToSend}
+        onSend={send}
+        onAttach={handleAttach}
+        onLoadOlder={loadOlder}
+        onProfileClick={openProfile}
+        currentUsername={$auth.user?.username}
+        canDeleteAny={canManageSpace}
+        onDelete={deleteChatMessage}
+        onEdit={editChatMessage}
+        onReport={reportChatMessage}
+        emailVerified={$auth.user?.email_verified ?? true}
+        {chatError}
+      />
+    </main>
+
+    {#if selectedSpaceId && !dmMode && showMembers}
+      <MemberList
+        width={190}
+        {members}
+        loading={membersLoading}
+        error={membersErr}
+        onOpenProfile={(member) => openProfile(member.username)}
+        onBack={() => (showMembers = false)}
+      />
+    {/if}
+  </div>
+
+  <InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
+  <AdminPanel bind:show={showAdmin} />
+  <ProfileDialog bind:show={showProfile} username={profileUsername} {avatarVersion} onEditProfile={editOwnProfile} />
+
+  {#if reporting}
+    <ReportDialog
+      targetType={reporting.type}
+      targetId={reporting.id}
+      label={reporting.label}
+      onClose={() => (reporting = null)}
     />
   {/if}
 
-  <div class="col-divider" role="separator" onpointerdown={startResize('chats')}></div>
-
-  <main class="col-chat">
-    <div class="bar">
-      <button type="button" class="mobile-back-btn" onclick={backToChats}>
-        <ArrowLeft size={18} />
-      </button>
-      <div class="bar-user">
-        {#if $auth.user?.email_verified === false}
-          <span class="inline-notice">
-            Your email isn't verified
-            <button type="button" class="inline-notice-link" onclick={openSettings}>Verify now</button>
-          </span>
-        {/if}
-      </div>
-      <div class="bar-actions">
-        {#if canManageSpace}
-          <button type="button" class="theme-btn" onclick={() => showInvite = true}><UserPlus size={16} /> Invite</button>
-        {/if}
-        {#if instanceAdmin}
-          <button type="button" class="theme-btn" onclick={() => showAdmin = true}><AppWindow size={16} /> Admin</button>
-        {/if}
-        <button type="button" class="theme-btn" onclick={openSettings}><SettingsIcon size={16} /> Settings</button>
-      </div>
-    </div>
-
-    <VoiceBar bind:this={voiceBar} bind:voiceChatId />
-
-    <Chatbar
-      msgs={$msgs}
-      bind:txt
-      bind:replyingTo
-      bind:box
-      chatId={selectedChatId}
-      {hasOlder}
-      {loadingOlder}
-      {avatarVersion}
-      {enterToSend}
-      onSend={send}
-      onAttach={handleAttach}
-      onLoadOlder={loadOlder}
-      onProfileClick={openProfile}
-      currentUsername={$auth.user?.username}
-      canDeleteAny={canManageSpace}
-      onDelete={deleteChatMessage}
-      emailVerified={$auth.user?.email_verified ?? true}
-      {chatError}
-    />
-  </main>
-
-  {#if selectedSpaceId && !dmMode && showMembers}
-  <MemberList
-    width={190}
-    {members}
-    loading={membersLoading}
-    error={membersErr}
-    onOpenProfile={(member) => openProfile(member.username)}
-    onBack={() => (showMembers = false)}
+  <SettingsModal
+    bind:show={showSettings}
+    onClose={closeSettings}
+    onLogout={logout}
+    {theme}
+    onToggleTheme={toggleTheme}
+    onAvatarChanged={() => (avatarVersion += 1)}
+    {avatarVersion}
+    bind:restoreLastLocation
+    bind:enterToSend
   />
-{/if}
-</div>
-
-<InviteDialog bind:show={showInvite} spaceId={selectedSpaceId} spaceRole={selectedSpaceRole} />
-    <AdminPanel bind:show={showAdmin} />
-    <ProfileDialog bind:show={showProfile} username={profileUsername} {avatarVersion} onEditProfile={editOwnProfile} />
-
-    <SettingsModal
-      bind:show={showSettings}
-      onClose={closeSettings}
-      onLogout={logout}
-      {theme}
-      onToggleTheme={toggleTheme}
-      onAvatarChanged={() => (avatarVersion += 1)}
-      {avatarVersion}
-      bind:restoreLastLocation
-      bind:enterToSend
-    />
-
 {:else}
   <HomePage />
 {/if}

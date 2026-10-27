@@ -143,31 +143,37 @@
   font-size: var(--font-size-small);
   border-radius: var(--radius);
 }
+
 .sidebar-new-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   width: calc(100% - 16px);
-  margin: 8px 8px 2px;
-  padding: 10px;
+  margin: 2px 8px 8px;
+  padding: 8px 10px;
   min-height: var(--field-height);
+  box-sizing: border-box;
+
   border: none;
+  border-radius: var(--radius);
   background: var(--panel);
   color: var(--text);
+
   font-size: var(--font-size);
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  box-sizing: border-box;
-  border-radius: var(--radius);
 }
+
 .sidebar-new-btn:hover {
   background: var(--panel-soft);
 }
+
 .sidebar-new-btn:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
 .sidebar-dialog-backdrop {
   position: fixed;
   top: 0;

@@ -25,6 +25,8 @@
     currentUsername = null,
     canDeleteAny = false,
     onDelete = undefined,
+    onEdit = undefined,
+    onReport = undefined,
     emailVerified = true,
     chatError = ''
   } = $props();
@@ -116,6 +118,8 @@
     {currentUsername}
     {canDeleteAny}
     {onDelete}
+    {onEdit}
+    {onReport}
     onReply={(message) => (replyingTo = message)}
   />
 

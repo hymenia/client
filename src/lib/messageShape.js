@@ -9,6 +9,7 @@ export function mapServerMessage(row) {
     senderGlobalRoles: row.sender_global_roles || [],
     senderIsApp: row.sender_is_bot || false,
     content: row.content,
+    editedAt: row.edited_at || null,
     replyToId: row.reply_to_id || null,
     replyToSender: row.reply_to_sender || null,
     replyToContent: row.reply_to_content || null,

@@ -210,3 +210,63 @@
 .admin-load-more {
   align-self: center;
 }
+
+.admin-user-row.report-row {
+  display: block;
+}
+
+.report-header-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.report-reason-badge {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.report-content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 8px 0;
+}
+
+.report-content-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.report-target {
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  border-left: 3px solid var(--border, rgba(128, 128, 128, 0.4));
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 8rem;
+  overflow-y: auto;
+}
+
+.report-details {
+  margin: 0.2rem 0;
+  opacity: 0.85;
+}
+
+.report-row .admin-user-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.report-row .admin-user-actions .theme-btn {
+  margin-left: 0;
+}
