@@ -78,6 +78,8 @@
                   <span class="global-role-badge" title="Verified"><BadgeCheck size={16} /></span>
                 {:else if role === 'developer'}
                   <span class="global-role-badge" title="Developer"><Code size={16} /></span>
+                {:else if role === 'glee'}
+                  <span class="global-role-badge" title="Glee"><img src="/global_roles/glee.png" alt="Glee" width="16" height="16" /></span>
                 {/if}
               {/each}
             </div>

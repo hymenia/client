@@ -41,6 +41,7 @@
 
 <div class="invite-page">
   <div class="invite-card">
+    <img src="/wordmark.svg" alt="Wordmark" />
     {#if status === 'joining'}
       <p>Joining space...</p>
     {:else if status === 'done'}

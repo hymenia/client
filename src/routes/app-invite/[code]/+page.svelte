@@ -82,6 +82,7 @@
 
 <div class="invite-page">
   <div class="invite-card">
+    <img src="/wordmark.svg" alt="Wordmark" />
     {#if loading}
       <p>Loading invite...</p>
     {:else if notFound}
