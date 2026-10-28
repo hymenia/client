@@ -305,11 +305,20 @@
     return URL.createObjectURL(await response.blob());
   }
 
-  async function openAttachment(attachment) {
-    const objectUrl = await fetchAttachment(attachment);
-    if (!objectUrl) return;
-    window.open(objectUrl, '_blank', 'noopener,noreferrer');
-  }
+async function openAttachment(attachment) {
+  const cached = previewUrls[attachment.id];
+  const objectUrl = cached ?? (await fetchAttachment(attachment));
+  if (!objectUrl) return;
+
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.download = attachment.name || 'attachment';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  if (!cached) setTimeout(() => URL.revokeObjectURL(objectUrl), 10_000);
+}
 
   $effect(() => {
     for (const message of msgs) {
