@@ -474,7 +474,20 @@
   });
 
   function markMessageDeleted(messageId) {
-    msgs.update((items) => items.filter((message) => String(message.id) !== String(messageId)));
+    const id = String(messageId);
+    msgs.update((items) =>
+      items
+        .filter((message) => String(message.id) !== id)
+        .map((message) =>
+          message.replyTo && String(message.replyTo.id) === id
+            ? {
+                ...message,
+                replyTo: { ...message.replyTo, content: '', deletedAt: new Date().toISOString() }
+              }
+            : message
+        )
+    );
+    if (replyingTo && String(replyingTo.id) === id) replyingTo = null;
   }
 
   async function deleteChatMessage(message) {
@@ -483,10 +496,18 @@
   }
 
   function applyMessageEdit(messageId, content, editedAt) {
+    const id = String(messageId);
     msgs.update((items) =>
-      items.map((m) =>
-        String(m.id) === String(messageId) ? { ...m, content, editedAt } : m
-      )
+      items.map((m) => {
+        let next = m;
+        if (String(m.id) === id) {
+          next = { ...next, content, editedAt };
+        }
+        if (m.replyTo && String(m.replyTo.id) === id) {
+          next = { ...next, replyTo: { ...m.replyTo, content, editedAt } };
+        }
+        return next;
+      })
     );
   }
 
