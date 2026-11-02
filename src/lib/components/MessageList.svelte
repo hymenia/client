@@ -365,10 +365,16 @@ async function openAttachment(attachment) {
           </button>
         {/if}
         <div class="msg-body">
-          {#if m.replyToSender}
+          {#if m.replyTo}
             <div class="msg-reply-quote">
-              <span class="msg-reply-quote-sender">{m.replyToSender}</span>
-              <span class="msg-reply-quote-content">{m.replyToContent}</span>
+              {#if m.replyTo.deletedAt}
+                <span class="msg-reply-quote-content">Original message deleted</span>
+              {:else if m.replyTo.unavailable}
+                <span class="msg-reply-quote-content">Original message unavailable</span>
+              {:else}
+                <span class="msg-reply-quote-sender">{m.replyTo.sender}</span>
+                <span class="msg-reply-quote-content">{m.replyTo.content}</span>
+              {/if}
             </div>
           {/if}
           {#if !grouped}
