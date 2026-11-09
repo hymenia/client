@@ -17,7 +17,7 @@
     "tauri:android:build": "pnpm dlx @tauri-apps/cli@^2 android build"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/adapter-static": "^3.0.11",
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "svelte": "^5.0.0",
