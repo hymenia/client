@@ -290,7 +290,7 @@
 
 <div class="developer-panel">
   <h3>Apps</h3>
-  <p>Create a app. Documentation isn't available yet.</p>
+  <p>Create a app. You can learn how to use the Hymenia API to make your app work at <a href="https://docs.hymenia.com">docs.hymenia.com</a></p>
 
   <form class="app-create-row" onsubmit={(e) => { e.preventDefault(); generateApp(); }}>
     <input bind:value={newAppName} maxlength="80" placeholder="App name" />
