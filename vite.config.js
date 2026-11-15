@@ -52,6 +52,14 @@ export default ({ mode }) => {
         usePolling: true,
         interval: 500
       }
+    },
+
+    preview: {
+      host: '0.0.0.0', 
+      port: 5173,
+      strictPort: true,
+      https: tls
     }
   };
+
 };
