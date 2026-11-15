@@ -1,6 +1,5 @@
 <script>
   import { API_HOST } from '$lib/config.js';
-  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 
   let { width, members = [], loading = false, error = '', onOpenProfile, onBack } = $props();
 
@@ -20,9 +19,6 @@
 </script>
 
 <aside class="col-chats" style:--col-width={`${width}px`}>
-  <button type="button" class="mobile-back-btn" onclick={() => onBack?.()}>
-    <ArrowLeft size={18} />
-  </button>
 
   <p class="member-count">
     {members.length} member{members.length === 1 ? '' : 's'}
