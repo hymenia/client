@@ -179,8 +179,8 @@ importers:
         specifier: ^17.0.3
         version: 17.0.3
       altcha:
-        specifier: ^3.5.0
-        version: 3.5.0
+        specifier: ^3.6.0
+        version: 3.6.0
       emoji-picker-element:
         specifier: ^1.29.1
         version: 1.29.1
@@ -406,8 +406,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  altcha@3.5.0:
-    resolution: {integrity: sha512-wBXNK1bBeWs/XTOZiyE3JQvRNECgFKYEJqcPxFW7tFd7ErG62yQmMlRasygZrza3zyNTTuon3BfMF/PcBcepcw==}
+  altcha@3.6.0:
+    resolution: {integrity: sha512-Q219oO6EbpXm6yZv5E1aprDaiYea76tQFTc/IqlzRgdCyWhyGPR5x/PcEeOyp2fR8sCMON/FTnhwb9tjVYmpAA==}
 
   aria-query@5.3.1:
     resolution: {integrity: sha512-Z/ZeOgVl7bcSYZ/u/rh0fOpvEpq//LZmdbkXyc7syVzjPAhfOa9ebsdTSjEBDU4vs5nC98Kfduj1uFo0qyET3g==}
@@ -865,7 +865,7 @@ snapshots:
 
   acorn@8.18.0: {}
 
-  altcha@3.5.0:
+  altcha@3.6.0:
     dependencies:
       hash-wasm: 4.12.0
 
